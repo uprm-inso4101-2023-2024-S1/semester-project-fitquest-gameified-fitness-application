@@ -7,7 +7,7 @@ interface TimerAppProps {
 }
 
 const TimerApp: React.FC<TimerAppProps> = ({ initialTime = 0}) => {
-    const [seconds, setSeconds] = useState<number>(initialTime);
+    const [milliseconds, setMilliseconds] = useState<number>(initialTime);
     const [isRunning, setIsRunning] = useState<boolean>(false);
 
     useEffect (() => {
@@ -15,8 +15,8 @@ const TimerApp: React.FC<TimerAppProps> = ({ initialTime = 0}) => {
 
         if(isRunning) {
             interval = setInterval(()=> {
-                setSeconds(prevSeconds => prevSeconds + 1);
-            }, 1000);
+                setMilliseconds(prevmilliseconds => prevmilliseconds + 10);
+            }, 10);
         }
 
         return () => {
@@ -38,16 +38,26 @@ const TimerApp: React.FC<TimerAppProps> = ({ initialTime = 0}) => {
 
     const resetTimer = () => {
         stopTimer();
-        setSeconds(0);
+        setMilliseconds(0);
     };
 
     const toggleTimer = () => {
         setIsRunning(!isRunning)
     }
 
+    // Formula to calculate hours, minutes, seconds, milliseconds and centiseconds
+    const hours = Math.floor(milliseconds / 3600000);
+    const minutes = Math.floor((milliseconds % 3600000) / 60000);
+    const seconds = Math.floor((milliseconds % 60000) / 1000);
+    const centiseconds = Math.floor((milliseconds % 1000) / 100);
+    const ms = milliseconds % 100;
+
+    // Format time to the desired format
+    const formatTime = (unit: number) => (unit < 10 ? '0' + unit : unit);
+
     return (
         <View>
-            <Text>       Time: {seconds}s </Text>
+            <Text>Time: {formatTime(hours)}:{formatTime(minutes)}:{formatTime(seconds)}.{centiseconds}{ms < 10 ? '0' + ms : ms}</Text>
             <Button title={`Start Timer`} onPress={startTimer} />
             <Button title="Stop Timer" onPress={stopTimer} />
             <Button title="Reset Timer" onPress={resetTimer} />
