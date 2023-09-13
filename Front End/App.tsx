@@ -1,11 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import TimerApp from './components/TimerApp ';
+import StopWatch from './components/StopWatch';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <TimerApp/>
+      <StopWatch/>
     </View>
   );
 }
