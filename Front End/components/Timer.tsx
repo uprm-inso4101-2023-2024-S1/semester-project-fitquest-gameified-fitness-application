@@ -47,13 +47,16 @@ const Timer: React.FC<TimerProps> = ({ initialTime = 180000}) => {
     }
 
     const changeTimer = () => {
-        <View>
-            <Button title="00:01:00" onPress={oneMinute} />
-            <Button title="00:02:00" onPress={twoMinutes} />
-            <Button title="30:00:00" onPress={thirtyMinutes} />
-            <Button title="Custom" onPress={customTime} />
-        </View>
+        return (
+            <View>
+               <Button title="00:01:00" onPress={oneMinute} />
+               <Button title="00:02:00" onPress={twoMinutes} />
+               <Button title="30:00:00" onPress={thirtyMinutes} />
+                <Button title="Custom" onPress={customTime} />
+            </View>
+        )
     }
+    
     const oneMinute = () => { initialTime = 1800000}
     const twoMinutes = () => { initialTime = 60000} 
     const thirtyMinutes = () => { initialTime = 180000} 
