@@ -46,6 +46,21 @@ const Timer: React.FC<TimerProps> = ({ initialTime = 180000}) => {
         setIsRunning(!isRunning)
     }
 
+    const changeTimer = () => {
+        <View>
+            <Button title="00:01:00" onPress={oneMinute} />
+            <Button title="00:02:00" onPress={twoMinutes} />
+            <Button title="30:00:00" onPress={thirtyMinutes} />
+            <Button title="Custom" onPress={customTime} />
+        </View>
+    }
+    const oneMinute = () => { initialTime = 1800000}
+    const twoMinutes = () => { initialTime = 60000} 
+    const thirtyMinutes = () => { initialTime = 180000} 
+    const customTime = () => {
+
+    }
+
     // Formula to calculate hours, minutes, seconds, milliseconds and centiseconds
     const hours = Math.floor(milliseconds / 3600000);
     const minutes = Math.floor((milliseconds % 3600000) / 60000);
@@ -62,6 +77,7 @@ const Timer: React.FC<TimerProps> = ({ initialTime = 180000}) => {
             <Button title={`Start Timer`} onPress={startTimer} />
             <Button title="Stop Timer" onPress={stopTimer} />
             <Button title="Reset Timer" onPress={resetTimer} />
+            <Button title="Choose Time" onPress={changeTimer}/>
         </View>
     );
 };
