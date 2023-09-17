@@ -1,5 +1,6 @@
 import { StatusBar } from "expo-status-bar";
-import { View, Text, Button, StyleSheet } from "react-native";
+import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import {NavigationContainer} from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 
 interface TimerProps {
@@ -48,20 +49,40 @@ const Timer: React.FC<TimerProps> = ({ initialTime = 180000}) => {
 
     const changeTimer = () => {
         return (
-            <View>
-               <Button title="00:01:00" onPress={oneMinute} />
-               <Button title="00:02:00" onPress={twoMinutes} />
-               <Button title="30:00:00" onPress={thirtyMinutes} />
-                <Button title="Custom" onPress={customTime} />
-            </View>
-        )
+        <View>
+            <Button title="00:01:00" onPress={oneMinute} />
+            <Button title="00:02:00" onPress={twoMinutes} />
+            <Button title="30:00:00" onPress={thirtyMinutes} />
+            <Button title="Custom" onPress={customTime} />
+        </View>
+        );
     }
     
-    const oneMinute = () => { initialTime = 1800000}
-    const twoMinutes = () => { initialTime = 60000} 
-    const thirtyMinutes = () => { initialTime = 180000} 
-    const customTime = () => {
+    const oneMinute = () => { setMilliseconds(60000)}
+    const twoMinutes = () => { setMilliseconds(180000)} 
+    const thirtyMinutes = () => { setMilliseconds(1800000)} 
 
+    const customTime = () => {
+        return (
+            <TextInput>
+                <Text> Hours</Text>
+                keyboardType = 'numeric'
+                maxLength = {2}
+                value = {hours}
+                <TextInput>
+                    <Text> Minutes</Text>
+                    keyboardType = 'numeric'
+                    maxLength = {2}
+                    value = {minutes}
+                    <TextInput>
+                        <Text> Seconds</Text>
+                        keyboardType = 'numeric'
+                        maxLength = {2}
+                        value = {seconds}
+                    </TextInput>
+                </TextInput>
+            </TextInput>
+        );
     }
 
     // Formula to calculate hours, minutes, seconds, milliseconds and centiseconds
