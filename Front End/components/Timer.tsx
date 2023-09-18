@@ -1,13 +1,34 @@
 import { StatusBar } from "expo-status-bar";
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import { View, Text, TextInput, Button, StyleSheet, Platform, Dimensions } from "react-native";
 import { NavigationContainer } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
+import { Picker } from '@react-native-picker/picker';
 
-/*
-interface TimerProps {
-    initialTime?: number;
-}
-*/
+const screen = Dimensions.get("window");
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  picker: {
+    width: 70,
+    marginLeft: 20,
+    ...Platform.select({
+      android: {
+        color: "#fff",
+        marginLeft: 20,
+      },
+    }),
+  },
+  pickerItem: {
+    fontSize: 15,
+  },
+  pickerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+});
 
 const formatNumber = (number: number) => `0${number}`.slice(-2);
 
@@ -19,10 +40,6 @@ const getRemaining = (time: number) => {
     const milliseconds = Math.floor((remainingTimeInSeconds % 1) * 100);
 
     return {
-        // hours: formatNumber(hours),
-        // minutes: formatNumber(minutes),
-        // seconds: formatNumber(seconds),
-        // milliseconds: formatNumber(milliseconds),
         hours, minutes, seconds, milliseconds
     };
 };
@@ -36,11 +53,75 @@ const createArray = (length: number) => {
     }
 
     return arr;
-};
+};    
 
-const AVAILABLE_HOURS = createArray(5);
+const AVAILABLE_HOURS = createArray(10);
 const AVAILABLE_MINUTES = createArray(60);
 const AVAILABLE_SECONDS = createArray(60);
+
+type PickerProps = {
+    selectedHours: string;
+    selectedMinutes: string;
+    selectedSeconds: string;
+    setSelectedHours: (item: string) => void;
+    setSelectedMinutes: (item: string) => void;
+    setSelectedSeconds: (item: string) => void;
+  };
+  
+  const Pickers = ({
+    selectedHours,
+    setSelectedHours,
+    selectedMinutes,
+    setSelectedMinutes,
+    selectedSeconds,
+    setSelectedSeconds,
+  }: PickerProps) => (
+    <View style={styles.pickerContainer}>
+      <Picker
+        style={styles.picker}
+        itemStyle={styles.pickerItem}
+        selectedValue={selectedHours}
+        onValueChange={(itemValue) => {
+          setSelectedHours(itemValue);
+        }}
+      >
+        {AVAILABLE_HOURS.map((value) => (
+          <Picker.Item key={value} label={value} value={value} />
+        ))}
+      </Picker>
+      <Text style={styles.pickerItem}>hours</Text>
+  
+      <Picker
+        style={styles.picker}
+        itemStyle={styles.pickerItem}
+        selectedValue={selectedMinutes}
+        onValueChange={(itemValue) => {
+          setSelectedMinutes(itemValue);
+        }}
+      >
+        {AVAILABLE_MINUTES.map((value) => (
+          <Picker.Item key={value} label={value} value={value} />
+        ))}
+      </Picker>
+      <Text style={styles.pickerItem}>min</Text>
+  
+      <Picker
+        style={styles.picker}
+        itemStyle={styles.pickerItem}
+        selectedValue={selectedSeconds}
+        onValueChange={(itemValue) => {
+          setSelectedSeconds(itemValue);
+        }}
+        mode="dropdown"
+      >
+        {AVAILABLE_SECONDS.map((value) => (
+          <Picker.Item key={value} label={value} value={value} />
+        ))}
+      </Picker>
+      <Text style={styles.pickerItem}>sec</Text>
+    </View>
+  );
+  
 
 type userTimerProps = {
     selectedHours: string;
@@ -96,9 +177,6 @@ const useTimer = ({
         };
     }, [isRunning, remainingTime]);
 
-    // Format the remaining time into hours, minutes, seconds, and milliseconds
-    // const formattedRemainingTime = getRemaining(remainingTime);
-
     React.useEffect(() => {
         if (remainingTime <= 0) {
             setRemainingTime(0);
@@ -111,100 +189,8 @@ const useTimer = ({
         start,
         stop,
         remainingTime
-        // remainingTime: formattedRemainingTime,
     };
 };
-
-
-
-/*
-const Timer: React.FC<TimerProps> = ({ initialTime = 180000}) => {
-    const [milliseconds, setMilliseconds] = useState<number>(initialTime);
-    const [isRunning, setIsRunning] = useState<boolean>(false);
-
-    useEffect (() => {
-        let interval:  NodeJS.Timeout;
-
-        if(isRunning) {
-            interval = setInterval(()=> {
-                setMilliseconds(prevmilliseconds => prevmilliseconds - 10);
-            }, 9);
-        }
-
-        return () => {
-            if (interval) {
-                clearInterval(interval);
-            }
-        };
-
-        
-    }, [isRunning]);
-
-    const startTimer = () => {
-        setIsRunning(true);
-    };
-
-    const stopTimer = () => {
-        setIsRunning(false);
-    };
-
-    const resetTimer = () => {
-        stopTimer();
-        setMilliseconds(initialTime);
-    };
-
-    const toggleTimer = () => {
-        setIsRunning(!isRunning)
-    }
-
-    const changeTimer = () => {
-        return (
-        <View>
-            <Button title="00:01:00" onPress={oneMinute} />
-            <Button title="00:02:00" onPress={twoMinutes} />
-            <Button title="30:00:00" onPress={thirtyMinutes} />
-            <Button title="Custom" onPress={customTime} />
-        </View>
-        );
-    }
-    
-    const oneMinute = () => { setMilliseconds(60000)}
-    const twoMinutes = () => { setMilliseconds(180000)} 
-    const thirtyMinutes = () => { setMilliseconds(1800000)} 
-
-    const customTime = () => {
-        return (
-            <TextInput>
-                <Text> Hours</Text>
-                keyboardType = 'numeric'
-                maxLength = {2}
-                value = {hours}
-                <TextInput>
-                    <Text> Minutes</Text>
-                    keyboardType = 'numeric'
-                    maxLength = {2}
-                    value = {minutes}
-                    <TextInput>
-                        <Text> Seconds</Text>
-                        keyboardType = 'numeric'
-                        maxLength = {2}
-                        value = {seconds}
-                    </TextInput>
-                </TextInput>
-            </TextInput>
-        );
-    }
-
-    // Formula to calculate hours, minutes, seconds, milliseconds and centiseconds
-    const hours = Math.floor(milliseconds / 3600000);
-    const minutes = Math.floor((milliseconds % 3600000) / 60000);
-    const seconds = Math.floor((milliseconds % 60000) / 1000);
-    const centiseconds = Math.floor((milliseconds % 1000) / 10);
-    const ms = milliseconds % 100;
-
-    // Format time to the desired format
-    const formatTime = (unit: number) => (unit < 10 ? '0' + unit : unit);
-*/
 
 export default () => {
     const [selectedMinutes, setSelectedMinutes] = React.useState("0");
@@ -219,21 +205,28 @@ export default () => {
         selectedMilliseconds,
     });
 
-    // const hours = getRemaining(parseInt(remainingTime.hours, 10))
-    // const minutes = getRemaining(parseInt(remainingTime.minutes, 10))
-    // const seconds = getRemaining(parseInt(remainingTime.seconds, 10))
-    // const milliseconds = getRemaining(parseInt(remainingTime.milliseconds, 10))
-
     const { hours, minutes, seconds, milliseconds } = getRemaining(remainingTime)
 
     return (
-        <View>
+        <View style={styles.container}>
             <Text>Time: {`${formatNumber(hours)}:${formatNumber(minutes)}:${formatNumber(seconds)}:${formatNumber(milliseconds)}`}</Text>
-            <Button title="Start Timer" onPress={start} />
-            <Button title="Stop Timer" onPress={stop} />
-            {/* <Button title="Reset Timer" onPress={reset} />
-            <Button title="Choose Time" onPress={changeTimer} /> */}
+            <Button title="Start" onPress={start} />
+            { isRunning ? (
+                <>
+                    <Button title="Stop" onPress={stop} />
+                </>
+            ) : (
+                <>
+                    <Pickers
+                        selectedHours={selectedHours}
+                        setSelectedHours={setSelectedHours}
+                        selectedMinutes={selectedMinutes}
+                        setSelectedMinutes={setSelectedMinutes}
+                        selectedSeconds={selectedSeconds}
+                        setSelectedSeconds={setSelectedSeconds}
+                    />
+                </>
+            )}
         </View>
     );
 };
-// export default Timer
