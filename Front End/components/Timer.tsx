@@ -149,17 +149,8 @@ const useTimer = ({
             parseInt(selectedSeconds, 10)
         );
 
-        setIsRunning(true)
-
-        /*
-        if (remainingTime != 0) {
             setIsReset(false);
             setIsRunning(true);
-        } else {
-            setIsReset(true);
-            setIsRunning(false);
-        }
-        */
     };
 
     const stop = () => {
@@ -172,6 +163,7 @@ const useTimer = ({
             (parseInt(selectedMinutes, 10) * 60) +
             parseInt(selectedSeconds, 10)
         );
+        
         setIsRunning(false);
         setIsReset(true);
     }
@@ -215,7 +207,8 @@ const useTimer = ({
 };
 
 export default () => {
-    const [selectedMinutes, setSelectedMinutes] = React.useState("0");
+    
+    const [selectedMinutes, setSelectedMinutes] = React.useState("15");
     const [selectedSeconds, setSelectedSeconds] = React.useState("0");
     const [selectedHours, setSelectedHours] = React.useState("0");
 
@@ -224,34 +217,29 @@ export default () => {
         selectedMinutes,
         selectedSeconds
     });
+    
 
     const { hours, minutes, seconds, milliseconds } = getRemaining(remainingTime)
 
     return (
         <View style={styles.container}>
             <Text>Time: {`${formatNumber(hours)}:${formatNumber(minutes)}:${formatNumber(seconds)}.${formatNumber(milliseconds)}`}</Text>
-            <Button title="Start" onPress={start} />
-            {isRunning ? (
-                <>
-                    <Button title="Stop" onPress={stop} />
-                </>
+            <Button title="Start" onPress={ start } disabled={ (isRunning) || (parseInt(selectedHours, 10) + parseInt(selectedMinutes, 10) + parseInt(selectedSeconds, 10) == 0) } />
+            {isRunning && remainingTime != 0 ? (
+                <Button title="Stop" onPress={stop} />
             ) : (
-                <>
-                    <Button title="Reset" onPress={reset} />
-                </>
+                <Button title="Reset" onPress={reset} disabled={ parseInt(selectedHours, 10) + parseInt(selectedMinutes, 10) + parseInt(selectedSeconds, 10) == 0 } />
             )}
-            {isReset ? (
-                <>
-                    <Pickers
-                        selectedHours={selectedHours}
-                        setSelectedHours={setSelectedHours}
-                        selectedMinutes={selectedMinutes}
-                        setSelectedMinutes={setSelectedMinutes}
-                        selectedSeconds={selectedSeconds}
-                        setSelectedSeconds={setSelectedSeconds}
-                    />
-                </>
-            ) : (<></>)}
+            {isReset && (
+                <Pickers
+                    selectedHours={selectedHours}
+                    setSelectedHours={setSelectedHours}
+                    selectedMinutes={selectedMinutes}
+                    setSelectedMinutes={setSelectedMinutes}
+                    selectedSeconds={selectedSeconds}
+                    setSelectedSeconds={setSelectedSeconds}
+                />
+            )}
         </View>
     );
 };
