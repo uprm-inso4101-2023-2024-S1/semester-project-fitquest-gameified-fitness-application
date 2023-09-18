@@ -12,12 +12,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   picker: {
-    width: 70,
-    marginLeft: 20,
+    width: 80,
+    marginLeft: 15,
     ...Platform.select({
       android: {
         color: "#fff",
-        marginLeft: 20,
+        marginLeft: 15,
       },
     }),
   },
@@ -55,7 +55,7 @@ const createArray = (length: number) => {
     return arr;
 };    
 
-const AVAILABLE_HOURS = createArray(10);
+const AVAILABLE_HOURS = createArray(11);
 const AVAILABLE_MINUTES = createArray(60);
 const AVAILABLE_SECONDS = createArray(60);
 
@@ -127,14 +127,12 @@ type userTimerProps = {
     selectedHours: string;
     selectedMinutes: string;
     selectedSeconds: string;
-    selectedMilliseconds: string;
 };
 
 const useTimer = ({
     selectedHours,
     selectedMinutes,
     selectedSeconds,
-    selectedMilliseconds,
 }: userTimerProps) => {
     const [isRunning, setIsRunning] = React.useState(false);
     let [remainingTime, setRemainingTime] = React.useState(
@@ -160,7 +158,7 @@ const useTimer = ({
         let interval: number | null = null;
         if (isRunning) {
             interval = window.setInterval(() => {
-                setRemainingTime((prevTime) => prevTime - 0.011); // Adjust time "speed" here
+                setRemainingTime((prevTime) => prevTime - 0.015); // Adjust time "speed" here
             }, 1); // Update every 1 millisecond
         } else {
             if (interval) {
@@ -194,15 +192,13 @@ const useTimer = ({
 
 export default () => {
     const [selectedMinutes, setSelectedMinutes] = React.useState("0");
-    const [selectedMilliseconds, setSelectedMilliSeconds] = React.useState("0");
     const [selectedSeconds, setSelectedSeconds] = React.useState("1");
     const [selectedHours, setSelectedHours] = React.useState("0");
 
     const { isRunning, start, stop, remainingTime } = useTimer({
         selectedHours,
         selectedMinutes,
-        selectedSeconds,
-        selectedMilliseconds,
+        selectedSeconds
     });
 
     const { hours, minutes, seconds, milliseconds } = getRemaining(remainingTime)
