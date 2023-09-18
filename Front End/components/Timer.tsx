@@ -7,27 +7,27 @@ import { Picker } from '@react-native-picker/picker';
 const screen = Dimensions.get("window");
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  picker: {
-    width: 80,
-    marginLeft: 15,
-    ...Platform.select({
-      android: {
-        color: "#fff",
+    container: {
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    picker: {
+        width: 80,
         marginLeft: 15,
-      },
-    }),
-  },
-  pickerItem: {
-    fontSize: 15,
-  },
-  pickerContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
+        ...Platform.select({
+            android: {
+                color: "#fff",
+                marginLeft: 15,
+            },
+        }),
+    },
+    pickerItem: {
+        fontSize: 15,
+    },
+    pickerContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+    },
 });
 
 const formatNumber = (number: number) => `0${number}`.slice(-2);
@@ -53,7 +53,7 @@ const createArray = (length: number) => {
     }
 
     return arr;
-};    
+};
 
 const AVAILABLE_HOURS = createArray(11);
 const AVAILABLE_MINUTES = createArray(60);
@@ -66,62 +66,62 @@ type PickerProps = {
     setSelectedHours: (item: string) => void;
     setSelectedMinutes: (item: string) => void;
     setSelectedSeconds: (item: string) => void;
-  };
-  
-  const Pickers = ({
+};
+
+const Pickers = ({
     selectedHours,
     setSelectedHours,
     selectedMinutes,
     setSelectedMinutes,
     selectedSeconds,
     setSelectedSeconds,
-  }: PickerProps) => (
+}: PickerProps) => (
     <View style={styles.pickerContainer}>
-      <Picker
-        style={styles.picker}
-        itemStyle={styles.pickerItem}
-        selectedValue={selectedHours}
-        onValueChange={(itemValue) => {
-          setSelectedHours(itemValue);
-        }}
-      >
-        {AVAILABLE_HOURS.map((value) => (
-          <Picker.Item key={value} label={value} value={value} />
-        ))}
-      </Picker>
-      <Text style={styles.pickerItem}>hours</Text>
-  
-      <Picker
-        style={styles.picker}
-        itemStyle={styles.pickerItem}
-        selectedValue={selectedMinutes}
-        onValueChange={(itemValue) => {
-          setSelectedMinutes(itemValue);
-        }}
-      >
-        {AVAILABLE_MINUTES.map((value) => (
-          <Picker.Item key={value} label={value} value={value} />
-        ))}
-      </Picker>
-      <Text style={styles.pickerItem}>min</Text>
-  
-      <Picker
-        style={styles.picker}
-        itemStyle={styles.pickerItem}
-        selectedValue={selectedSeconds}
-        onValueChange={(itemValue) => {
-          setSelectedSeconds(itemValue);
-        }}
-        mode="dropdown"
-      >
-        {AVAILABLE_SECONDS.map((value) => (
-          <Picker.Item key={value} label={value} value={value} />
-        ))}
-      </Picker>
-      <Text style={styles.pickerItem}>sec</Text>
+        <Picker
+            style={styles.picker}
+            itemStyle={styles.pickerItem}
+            selectedValue={selectedHours}
+            onValueChange={(itemValue) => {
+                setSelectedHours(itemValue);
+            }}
+        >
+            {AVAILABLE_HOURS.map((value) => (
+                <Picker.Item key={value} label={value} value={value} />
+            ))}
+        </Picker>
+        <Text style={styles.pickerItem}>hours</Text>
+
+        <Picker
+            style={styles.picker}
+            itemStyle={styles.pickerItem}
+            selectedValue={selectedMinutes}
+            onValueChange={(itemValue) => {
+                setSelectedMinutes(itemValue);
+            }}
+        >
+            {AVAILABLE_MINUTES.map((value) => (
+                <Picker.Item key={value} label={value} value={value} />
+            ))}
+        </Picker>
+        <Text style={styles.pickerItem}>min</Text>
+
+        <Picker
+            style={styles.picker}
+            itemStyle={styles.pickerItem}
+            selectedValue={selectedSeconds}
+            onValueChange={(itemValue) => {
+                setSelectedSeconds(itemValue);
+            }}
+            mode="dropdown"
+        >
+            {AVAILABLE_SECONDS.map((value) => (
+                <Picker.Item key={value} label={value} value={value} />
+            ))}
+        </Picker>
+        <Text style={styles.pickerItem}>sec</Text>
     </View>
-  );
-  
+);
+
 
 type userTimerProps = {
     selectedHours: string;
@@ -135,6 +135,7 @@ const useTimer = ({
     selectedSeconds,
 }: userTimerProps) => {
     const [isRunning, setIsRunning] = React.useState(false);
+    const [isReset, setIsReset] = React.useState(true);
     let [remainingTime, setRemainingTime] = React.useState(
         (parseInt(selectedHours, 10) * 3600) +
         (parseInt(selectedMinutes, 10) * 60) +
@@ -147,12 +148,33 @@ const useTimer = ({
             (parseInt(selectedMinutes, 10) * 60) +
             parseInt(selectedSeconds, 10)
         );
-        setIsRunning(true);
+
+        setIsRunning(true)
+
+        /*
+        if (remainingTime != 0) {
+            setIsReset(false);
+            setIsRunning(true);
+        } else {
+            setIsReset(true);
+            setIsRunning(false);
+        }
+        */
     };
 
     const stop = () => {
         setIsRunning(false);
     };
+
+    const reset = () => {
+        setRemainingTime(
+            (parseInt(selectedHours, 10) * 3600) +
+            (parseInt(selectedMinutes, 10) * 60) +
+            parseInt(selectedSeconds, 10)
+        );
+        setIsRunning(false);
+        setIsReset(true);
+    }
 
     React.useEffect(() => {
         let interval: number | null = null;
@@ -184,18 +206,20 @@ const useTimer = ({
 
     return {
         isRunning,
+        isReset,
         start,
         stop,
+        reset,
         remainingTime
     };
 };
 
 export default () => {
     const [selectedMinutes, setSelectedMinutes] = React.useState("0");
-    const [selectedSeconds, setSelectedSeconds] = React.useState("1");
+    const [selectedSeconds, setSelectedSeconds] = React.useState("0");
     const [selectedHours, setSelectedHours] = React.useState("0");
 
-    const { isRunning, start, stop, remainingTime } = useTimer({
+    const { isRunning, isReset, start, stop, reset, remainingTime } = useTimer({
         selectedHours,
         selectedMinutes,
         selectedSeconds
@@ -205,13 +229,18 @@ export default () => {
 
     return (
         <View style={styles.container}>
-            <Text>Time: {`${formatNumber(hours)}:${formatNumber(minutes)}:${formatNumber(seconds)}:${formatNumber(milliseconds)}`}</Text>
+            <Text>Time: {`${formatNumber(hours)}:${formatNumber(minutes)}:${formatNumber(seconds)}.${formatNumber(milliseconds)}`}</Text>
             <Button title="Start" onPress={start} />
-            { isRunning ? (
+            {isRunning ? (
                 <>
                     <Button title="Stop" onPress={stop} />
                 </>
             ) : (
+                <>
+                    <Button title="Reset" onPress={reset} />
+                </>
+            )}
+            {isReset ? (
                 <>
                     <Pickers
                         selectedHours={selectedHours}
@@ -222,7 +251,7 @@ export default () => {
                         setSelectedSeconds={setSelectedSeconds}
                     />
                 </>
-            )}
+            ) : (<></>)}
         </View>
     );
 };
