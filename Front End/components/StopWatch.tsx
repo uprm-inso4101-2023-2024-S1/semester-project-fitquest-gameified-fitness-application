@@ -58,9 +58,9 @@ const StopWatch: React.FC<StopWatchProps> = ({ initialTime = 0}) => {
     return (
         <View>
             <Text>Time: {formatTime(hours)}:{formatTime(minutes)}:{formatTime(seconds)}.{formatTime(centiseconds)}</Text>
-            <Button title={`Start Timer`} onPress={startTimer} />
-            <Button title="Stop Timer" onPress={stopTimer} />
-            <Button title="Reset Timer" onPress={resetTimer} />
+            <Button title={`Start`} onPress={startTimer} />
+            <Button title="Stop" onPress={stopTimer} />
+            <Button title="Reset" onPress={resetTimer} />
         </View>
     );
 };
