@@ -32,18 +32,6 @@ const styles = StyleSheet.create({
 
 const formatNumber = (number: number) => `0${number}`.slice(-2);
 
-const getRemaining = (time: number) => {
-    const hours = Math.floor(time / 3600); // Calculate hours
-    const remainingTimeInSeconds = time % 3600; // Calculate remaining time in seconds
-    const minutes = Math.floor(remainingTimeInSeconds / 60);
-    const seconds = Math.floor(remainingTimeInSeconds % 60);
-    const milliseconds = Math.floor((remainingTimeInSeconds % 1) * 100);
-
-    return {
-        hours, minutes, seconds, milliseconds
-    };
-};
-
 const createArray = (length: number) => {
     const arr = [];
     let i = 0;
@@ -137,61 +125,68 @@ const useTimer = ({
     const [isRunning, setIsRunning] = React.useState(false);
     const [isReset, setIsReset] = React.useState(true);
     let [remainingTime, setRemainingTime] = React.useState(
-        (parseInt(selectedHours, 10) * 3600) +
-        (parseInt(selectedMinutes, 10) * 60) +
-        parseInt(selectedSeconds, 10)
+        (parseInt(selectedHours, 10) * 3600000) +
+        (parseInt(selectedMinutes, 10) * 60000) +
+        parseInt(selectedSeconds, 10) * 1000
     );
 
+    const getRemainingTime = () => {
+        return remainingTime
+    }
+    
     const start = () => {
-        setRemainingTime(
-            (parseInt(selectedHours, 10) * 3600) +
-            (parseInt(selectedMinutes, 10) * 60) +
-            parseInt(selectedSeconds, 10)
-        );
-
+        if (isReset) {
+            setRemainingTime(
+                (parseInt(selectedHours, 10) * 3600 * 1000) +
+                (parseInt(selectedMinutes, 10) * 60 * 1000) +
+                parseInt(selectedSeconds, 10) * 1000
+                );
+            }
+            
             setIsReset(false);
             setIsRunning(true);
-    };
-
-    const stop = () => {
-        setIsRunning(false);
-    };
-
-    const reset = () => {
-        setRemainingTime(
-            (parseInt(selectedHours, 10) * 3600) +
-            (parseInt(selectedMinutes, 10) * 60) +
-            parseInt(selectedSeconds, 10)
-        );
+        };
         
-        setIsRunning(false);
-        setIsReset(true);
-    }
-
+        const stop = () => {
+            setIsRunning(false);
+        };
+        
+        const reset = () => {
+            setRemainingTime(
+                (parseInt(selectedHours, 10) * 3600 * 1000) +
+                (parseInt(selectedMinutes, 10) * 60 * 1000) +
+                parseInt(selectedSeconds, 10) * 1000
+                );
+                
+                setIsRunning(false);
+                setIsReset(true);
+            }
+            
     React.useEffect(() => {
-        let interval: number | null = null;
+        let interval: NodeJS.Timeout
         if (isRunning) {
-            interval = window.setInterval(() => {
-                setRemainingTime((prevTime) => prevTime - 0.015); // Adjust time "speed" here
-            }, 1); // Update every 1 millisecond
+            interval = setInterval(() => {
+                setRemainingTime((prevTime) => prevTime - 10);
+            }, 9);
         } else {
             if (interval) {
-                window.clearInterval(interval);
+                clearInterval(interval);
                 interval = null;
             }
             setIsRunning(false);
         }
-
+        
         return () => {
             if (interval) {
                 clearInterval(interval);
             }
         };
     }, [isRunning, remainingTime]);
-
+    
     React.useEffect(() => {
-        if (remainingTime <= 0) {
+        if (remainingTime <= 0 || remainingTime === 0) {
             setRemainingTime(0);
+            setIsReset(true);
             stop();
         }
     }, [remainingTime]);
@@ -199,36 +194,39 @@ const useTimer = ({
     return {
         isRunning,
         isReset,
+        getRemainingTime,
         start,
         stop,
         reset,
-        remainingTime
     };
 };
 
 export default () => {
     
-    const [selectedMinutes, setSelectedMinutes] = React.useState("15");
+    const [selectedMinutes, setSelectedMinutes] = React.useState("0");
     const [selectedSeconds, setSelectedSeconds] = React.useState("0");
     const [selectedHours, setSelectedHours] = React.useState("0");
 
-    const { isRunning, isReset, start, stop, reset, remainingTime } = useTimer({
+    const { isRunning, isReset, start, stop, reset, getRemainingTime } = useTimer({
         selectedHours,
         selectedMinutes,
         selectedSeconds
     });
     
+    // getRemainingTime() returns time in milliseconds
+    let hours = Math.floor(getRemainingTime() / 3600000);
+    let minutes = Math.floor(getRemainingTime() / 60000);
+    let seconds = Math.floor(getRemainingTime() / 1000);
+    let centiseconds = Math.floor(getRemainingTime() / 10);
 
-    const { hours, minutes, seconds, milliseconds } = getRemaining(remainingTime)
-
-    return (
+    return ( 
         <View style={styles.container}>
-            <Text>Time: {`${formatNumber(hours)}:${formatNumber(minutes)}:${formatNumber(seconds)}.${formatNumber(milliseconds)}`}</Text>
-            <Button title="Start" onPress={ start } disabled={ (isRunning) || (parseInt(selectedHours, 10) + parseInt(selectedMinutes, 10) + parseInt(selectedSeconds, 10) == 0) } />
-            {isRunning && remainingTime != 0 ? (
+            <Text>Time: {formatNumber(hours)}:{formatNumber(minutes)}:{formatNumber(seconds)}.{formatNumber(centiseconds)}</Text>
+            <Button title="Start" onPress={ start } disabled={ (isRunning) } />
+            {isRunning && getRemainingTime() != 0 ? (
                 <Button title="Stop" onPress={stop} />
             ) : (
-                <Button title="Reset" onPress={reset} disabled={ parseInt(selectedHours, 10) + parseInt(selectedMinutes, 10) + parseInt(selectedSeconds, 10) == 0 } />
+                <Button title="Reset" onPress={reset} disabled={ getRemainingTime() == 0 } />
             )}
             {isReset && (
                 <Pickers
