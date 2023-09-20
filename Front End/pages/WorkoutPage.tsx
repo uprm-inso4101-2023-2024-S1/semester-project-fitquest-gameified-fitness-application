@@ -1,26 +1,17 @@
-import React from "react";
-import StopWatchApp from "../components/StopWatch";
-import TimerApp from "../components/Timer";
+import { View, Text, Button } from "react-native";
 
-import { View, Text, StyleSheet } from "react-native";
-
-export const workoutPage = () => {
-    return (
-        <View style={styles.container}>
-            <StopWatchApp/>
-            <TimerApp /> 
-        </View>
-
-    )
-
-
-};
-
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-  });
+export default function WorkoutPage({ navigation }) {
+  return (
+    <View>
+      <Text>Menu of Woorkouts and Button to custom Workout screen</Text>
+      <Button
+        title="Create Your Own"
+        onPress={() => navigation.navigate("CustomWorkout")}
+      />
+      <Text>
+        Premade Workouts, When one of them is selected the Timer has to queue
+        and start all the intervals of the exercices
+      </Text>
+    </View>
+  );
+}

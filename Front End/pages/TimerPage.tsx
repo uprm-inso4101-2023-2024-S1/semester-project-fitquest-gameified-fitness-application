@@ -1,11 +1,14 @@
 import React from "react";
-import TimerApp from "../components/StopWatch";
+import StopWatchApp from "../components/StopWatch";
+import TimerApp from "../components/Timer";
+
 import { View, Text, StyleSheet } from "react-native";
 
-export const SocialPage = () => {
+export const TimerPage = () => {
   return (
     <View style={styles.container}>
-      <Text>This is the social page</Text>
+      <StopWatchApp />
+      <TimerApp />
     </View>
   );
 };
