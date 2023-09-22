@@ -30,8 +30,9 @@ const styles = StyleSheet.create({
     },
 });
 
-const formatNumber = (number: number) => `0${number}`.slice(-2);
-
+// We create an array of numbers from 1 - 59 in order
+// to map them on our picker components that will allow 
+// the user to set the timer's time.
 const createArray = (length: number) => {
     const arr = [];
     let i = 0;
@@ -47,35 +48,52 @@ const AVAILABLE_HOURS = createArray(11);
 const AVAILABLE_MINUTES = createArray(60);
 const AVAILABLE_SECONDS = createArray(60);
 
+function temp() {
+    console.log("ehllo")
+}
+
+// The picker is the component that inputs a 
+// custom amount of time for the timer.
 type PickerProps = {
-    selectedHours: string;
-    selectedMinutes: string;
-    selectedSeconds: string;
-    setSelectedHours: (item: string) => void;
-    setSelectedMinutes: (item: string) => void;
-    setSelectedSeconds: (item: string) => void;
+    selectedHours,
+    selectedMinutes,
+    selectedSeconds,
+    setSelectedHours,
+    setSelectedMinutes,
+    setSelectedSeconds
 };
 
 const Pickers = ({
     selectedHours,
-    setSelectedHours,
     selectedMinutes,
-    setSelectedMinutes,
     selectedSeconds,
+    setSelectedHours,
+    setSelectedMinutes,
     setSelectedSeconds,
 }: PickerProps) => (
     <View style={styles.pickerContainer}>
+        
         <Picker
             style={styles.picker}
             itemStyle={styles.pickerItem}
+            // selectedValue is the pickerProp being inputed
+            // by the user using the current picker 'slider'
             selectedValue={selectedHours}
+            // The onValueChange function is called in order
+            // to store the value of the time selected by the
+            // user on one of the already outlined pickerProps
             onValueChange={(itemValue) => {
                 setSelectedHours(itemValue);
             }}
         >
-            {AVAILABLE_HOURS.map((value) => (
+            { // Using javascript's map function we can take every
+            // value created using createArray() and add it as a
+            // picker item on our picker component, instead of 
+            // doing it manually
+            AVAILABLE_HOURS.map((value) => (
                 <Picker.Item key={value} label={value} value={value} />
             ))}
+
         </Picker>
         <Text style={styles.pickerItem}>hours</Text>
 
@@ -107,137 +125,116 @@ const Pickers = ({
             ))}
         </Picker>
         <Text style={styles.pickerItem}>sec</Text>
+
     </View>
 );
 
+// Timer component
+interface UserTimerProps {
+    initialTime?: number;
+}
 
-type userTimerProps = {
-    selectedHours: string;
-    selectedMinutes: string;
-    selectedSeconds: string;
-};
+const Timer: React.FC<UserTimerProps> = ({
+    initialTime,
+}) => {
 
-const useTimer = ({
-    selectedHours,
-    selectedMinutes,
-    selectedSeconds,
-}: userTimerProps) => {
-    const [isRunning, setIsRunning] = React.useState(false);
-    const [isReset, setIsReset] = React.useState(true);
-    let [remainingTime, setRemainingTime] = React.useState(
-        (parseInt(selectedHours, 10) * 3600000) +
-        (parseInt(selectedMinutes, 10) * 60000) +
-        parseInt(selectedSeconds, 10) * 1000
-    );
+    // The initialTime variable will fetch the amount of time
+    // that each exercise requires from the database that 
+    // contains all exercises used for workouts.
+    initialTime = 5000; // temporary
 
-    const getRemainingTime = () => {
-        return remainingTime
-    }
-    
+    const [isRunning, setIsRunning] = useState(false);
+
+    const [isReset, setIsReset] = useState(true);
+
+    // Remaining time is the variable that will be constantly
+    // updated when the timer's isRunning = true. This variable
+    // returns time as milliseconds
+    let [remainingTime, setRemainingTime] = useState(initialTime);
+
+    // When start button is clicked this function is called
     const start = () => {
         if (isReset) {
-            setRemainingTime(
-                (parseInt(selectedHours, 10) * 3600 * 1000) +
-                (parseInt(selectedMinutes, 10) * 60 * 1000) +
-                parseInt(selectedSeconds, 10) * 1000
-                );
-            }
-            
-            setIsReset(false);
-            setIsRunning(true);
-        };
-        
-        const stop = () => {
-            setIsRunning(false);
-        };
-        
-        const reset = () => {
-            setRemainingTime(
-                (parseInt(selectedHours, 10) * 3600 * 1000) +
-                (parseInt(selectedMinutes, 10) * 60 * 1000) +
-                parseInt(selectedSeconds, 10) * 1000
-                );
-                
-                setIsRunning(false);
-                setIsReset(true);
-            }
-            
-    React.useEffect(() => {
-        let interval: NodeJS.Timeout
+            setRemainingTime(initialTime);
+        }
+
+        setIsReset(false);
+        setIsRunning(true);
+    };
+
+    const stop = () => {
+        setIsRunning(false);
+    };
+
+    const reset = () => {
+        setRemainingTime(initialTime);
+
+        setIsRunning(false);
+        setIsReset(true);
+    }
+
+    const formatNumber = (number: number) => `0${number}`.slice(-2);
+
+    // This is a react hook. It is in charge of updating the
+    // remaining time from our initial time every millisecond
+    // The official react documentation has more info on how
+    // useEffect works
+    // https://react.dev/reference/react/useEffect
+    useEffect(() => {
+        let interval: NodeJS.Timeout;
+
         if (isRunning) {
             interval = setInterval(() => {
-                setRemainingTime((prevTime) => prevTime - 10);
-            }, 9);
-        } else {
-            if (interval) {
-                clearInterval(interval);
-                interval = null;
-            }
-            setIsRunning(false);
+                setRemainingTime(prevmilliseconds => prevmilliseconds - 10);
+            }, 1);
         }
-        
+
         return () => {
             if (interval) {
                 clearInterval(interval);
             }
         };
-    }, [isRunning, remainingTime]);
-    
-    React.useEffect(() => {
-        if (remainingTime <= 0 || remainingTime === 0) {
-            setRemainingTime(0);
-            setIsReset(true);
-            stop();
-        }
-    }, [remainingTime]);
 
-    return {
-        isRunning,
-        isReset,
-        getRemainingTime,
-        start,
-        stop,
-        reset,
-    };
-};
+    }, [isRunning]);
 
-export default () => {
-    
-    const [selectedMinutes, setSelectedMinutes] = React.useState("0");
-    const [selectedSeconds, setSelectedSeconds] = React.useState("0");
-    const [selectedHours, setSelectedHours] = React.useState("0");
+    // variables turns remainingTime variable to hours,
+    // minutes, seconds, and centiseconds to be displayed
+    // on timer component front end 
+    let hours = Math.floor(remainingTime / 3600000);
+    let minutes = Math.floor(remainingTime / 60000);
+    let seconds = Math.floor(remainingTime / 1000);
+    let centiseconds = Math.floor(remainingTime / 10);
 
-    const { isRunning, isReset, start, stop, reset, getRemainingTime } = useTimer({
-        selectedHours,
-        selectedMinutes,
-        selectedSeconds
-    });
-    
-    // getRemainingTime() returns time in milliseconds
-    let hours = Math.floor(getRemainingTime() / 3600000);
-    let minutes = Math.floor(getRemainingTime() / 60000);
-    let seconds = Math.floor(getRemainingTime() / 1000);
-    let centiseconds = Math.floor(getRemainingTime() / 10);
-
-    return ( 
+    return (
         <View style={styles.container}>
+            
             <Text>Time: {formatNumber(hours)}:{formatNumber(minutes)}:{formatNumber(seconds)}.{formatNumber(centiseconds)}</Text>
-            <Button title="Start" onPress={ start } disabled={ (isRunning) } />
-            {isRunning && getRemainingTime() != 0 ? (
+            
+            {/* The start button has a disabled property so that it
+            is only available to be used when timer is not running */}
+            <Button title="Start" onPress={start} disabled={(isRunning)} />
+
+            {/* The following functionality serves to show either the
+            stop button or the reset button under the start button. Stop
+            is shown if the timer is running, reset is shown when timer
+            is not running */}
+            {isRunning && remainingTime != 0 ? (
                 <Button title="Stop" onPress={stop} />
             ) : (
-                <Button title="Reset" onPress={reset} disabled={ getRemainingTime() == 0 } />
+                <Button title="Reset" onPress={reset} disabled={remainingTime == 0} />
             )}
-            {isReset && (
+            {/* {isReset && (
                 <Pickers
-                    selectedHours={selectedHours}
-                    setSelectedHours={setSelectedHours}
-                    selectedMinutes={selectedMinutes}
-                    setSelectedMinutes={setSelectedMinutes}
-                    selectedSeconds={selectedSeconds}
-                    setSelectedSeconds={setSelectedSeconds}
+                    selectedHours={hours}
+                    selectedMinutes={minutes}
+                    selectedSeconds={seconds}
+                    setSelectedHours={setHours}
+                    setSelectedMinutes={(min) => {setMinutes(min)}}
+                    setSelectedSeconds={setSeconds}
                 />
-            )}
+            )} */}
         </View>
     );
 };
+
+export default Timer;
