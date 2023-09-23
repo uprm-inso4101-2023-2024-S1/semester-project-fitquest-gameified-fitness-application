@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, TextInput } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
-import { exercises } from '../assets/exercisesData';
+import { exercises as initialExercises } from '../assets/exercisesData';
 
 const CustomWorkouts = ({ navigation }) => {
-
   const [selectedBodyPart, setSelectedBodyPart] = useState(null);
   const [expandedCategories, setExpandedCategories] = useState([]);
+  const [exercises, setExercises] = useState([...initialExercises]); // Initialize with the initial data
 
   const categories = Array.from(new Set(exercises.map((exercise) => exercise.category)));
 
@@ -19,6 +19,24 @@ const CustomWorkouts = ({ navigation }) => {
   };
 
   const isCategoryExpanded = (category) => expandedCategories.includes(category);
+
+  const handleDurationChange = (category, index, text) => {
+    const durationInMinutes = parseFloat(text);
+    if (!isNaN(durationInMinutes)) {
+      const durationInMilliseconds = durationInMinutes * 60000; // 1 minute = 60000 milliseconds
+      const updatedExercises = [...exercises];
+      updatedExercises
+        .filter((exercise) => exercise.category === category)
+        .forEach((exercise, exerciseIndex) => {
+          if (exerciseIndex === index) {
+            exercise.duration = durationInMilliseconds;
+          }
+        });
+
+      // Update the exercises state with the new exercise durations
+      setExercises(updatedExercises);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -42,7 +60,15 @@ const CustomWorkouts = ({ navigation }) => {
                 {exercises
                   .filter((exercise) => exercise.category === category)
                   .map((exercise, index) => (
-                    <Text key={index} style={styles.exercise}>{exercise.name}</Text>
+                    <View key={index} style={styles.exercise}>
+                      <Text style={styles.exercise}>{exercise.name}</Text>
+                      <TextInput
+                        style={styles.durationInput}
+                        placeholder="Duration (minutes)"
+                        keyboardType="numeric"
+                        onChangeText={(text) => handleDurationChange(category, index, text)}
+                      />
+                    </View>
                   ))}
               </View>
             )}
@@ -52,7 +78,6 @@ const CustomWorkouts = ({ navigation }) => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -84,6 +109,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
   },
+  categoryHeaderExpanded: {
+    backgroundColor: "#e0e0e0",
+  },
   exerciseList: {
     padding: 16,
   },
@@ -91,6 +119,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 8,
   },
+  durationInput: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 4,
+    padding: 8,
+    fontSize: 14,
+  },
+  
 });
 
 export default CustomWorkouts;
