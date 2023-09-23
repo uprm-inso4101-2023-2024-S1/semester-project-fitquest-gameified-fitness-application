@@ -1,4 +1,4 @@
-const exercises = [
+export const exercises = [
     { name: "Overhead Press", category: "arms", info: "A compound exercise that targets the shoulders and triceps while also engaging the core." },
     { name: "Bicep Curl", category: "arms", info: "An isolation exercise for the biceps, usually performed with dumbbells." },
     { name: "Tricep Dip", category: "arms", info: "Targets the triceps and can be done using parallel bars or a sturdy surface." },
