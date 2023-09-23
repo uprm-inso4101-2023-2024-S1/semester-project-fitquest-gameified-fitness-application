@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Button, TouchableOpacity } from 'react-native';
+import { View, Text, Button, TouchableOpacity, StyleSheet } from 'react-native';
 import { Workouts } from "../assets/workoutData";
 
 export default function WorkoutPage({ navigation }) {
@@ -10,7 +10,7 @@ export default function WorkoutPage({ navigation }) {
   };
 
   return (
-    <View style={{ flex: 1, padding: 16 }}>
+    <View style={styles.container}>
       <Text style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 16 }}>Workout Page</Text>
 
       {/* Display the list of workouts using map */}
@@ -37,6 +37,24 @@ export default function WorkoutPage({ navigation }) {
           </TouchableOpacity>
         );
       })}
+      
+      {/* Centered Create Your Own Button */}
+      <View style={styles.buttonContainer}>
+        <Button
+          title="Create Your Own"
+          onPress={() => navigation.navigate("CustomWorkout")}
+        />
+      </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+  },
+  buttonContainer: {
+    alignItems: 'center', // Center horizontally
+  },
+});
