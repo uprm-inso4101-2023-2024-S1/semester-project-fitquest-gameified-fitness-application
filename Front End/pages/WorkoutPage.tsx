@@ -2,11 +2,33 @@ import React, { useState } from 'react';
 import { View, Text, Button, TouchableOpacity, StyleSheet } from 'react-native';
 import { Workouts } from "../assets/workoutData";
 
-export default function WorkoutPage({ navigation }) {
-  const [selectedWorkout, setSelectedWorkout] = useState(null);
+interface Exercise {
+  name: string;
+  duration: number;
+  description: string;
+  gif_link: string;
+}
 
-  const selectWorkout = (workout) => {
+interface Workout {
+  key: number;
+  workout_name: string;
+  exercises: Exercise[];
+}
+
+interface Props {
+  navigation: any; // Adjust the type based on your navigation setup
+}
+
+export default function WorkoutPage({ navigation }: Props) {
+  const [selectedWorkout, setSelectedWorkout] = useState<Workout | null>(null);
+
+  const selectWorkout = (workout: Workout) => {
     setSelectedWorkout(workout === selectedWorkout ? null : workout);
+  };
+
+  const startWorkout = (workout: Workout) => {
+    // Handle starting the workout here
+    // For example, you can navigate to a workout timer screen
   };
 
   return (
@@ -31,14 +53,18 @@ export default function WorkoutPage({ navigation }) {
                       <Text>GIF Link: {exercise.gif_link}</Text>
                     </View>
                   ))}
+                  {/* Start Button for the workout */}
+                  <Button
+                    title="Start"
+                    onPress={() => startWorkout(item)}
+                    color="green" // You can customize the button color
+                  />
                 </View>
               )}
             </View>
           </TouchableOpacity>
         );
       })}
-      
-      {/* Centered Create Your Own Button */}
       <View style={styles.buttonContainer}>
         <Button
           title="Create Your Own"
