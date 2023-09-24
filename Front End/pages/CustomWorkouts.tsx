@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, TextInput } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, TextInput, ScrollView } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import { exercises as initialExercises } from '../assets/exercisesData';
 
@@ -64,22 +64,22 @@ const CustomWorkouts = ({ navigation }) => {
   
   const SelectedExercisesList = () => {
     return (
-      <View>
+      <ScrollView>
         <Text style={styles.selectedExercisesTitle}>Selected Exercises:</Text>
         {selectedExercises.map((exercise, index) => (
           <Text key={index} style={styles.selectedExercise}>
             {exercise.name}
           </Text>
         ))}
-      </View>
+      </ScrollView>
     );
   };
   
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.title}>Custom Workout System</Text>
-      <View style={styles.categoryList}>
+      <ScrollView style={styles.categoryList}>
         {categories.map((category) => (
           <View key={category} style={styles.categoryCard}>
             <TouchableOpacity
@@ -129,8 +129,8 @@ const CustomWorkouts = ({ navigation }) => {
             <Text style={styles.confirmButtonText}>Confirm Selection</Text>
             </TouchableOpacity>
           {selectedExercises.length > 0 && <SelectedExercisesList />}
-      </View>
-    </View>
+      </ScrollView>
+    </ScrollView>
   );
 };
 const styles = StyleSheet.create({
