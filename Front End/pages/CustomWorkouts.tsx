@@ -1,69 +1,95 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, TextInput, ScrollView } from "react-native";
-import { Ionicons } from '@expo/vector-icons';
-import { exercises as initialExercises } from '../assets/exercisesData';
-import { useNavigation } from "@react-navigation/native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  TextInput,
+  ScrollView,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { exercisesData as initialExercises, Exercise } from '../assets/exercisesData';
+import { Workouts, Workout } from "../assets/workoutData";
 
-const CustomWorkouts = ({ navigation }) => {
-  //const [selectedBodyPart, setSelectedBodyPart] = useState(null);
-  const [expandedCategories, setExpandedCategories] = useState([]);
-  const exercisesWithSelection = initialExercises.map((exercise) => ({
+const CustomWorkouts: React.FC = () => {
+  const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
+  const exercisesWithSelection: Exercise[] = initialExercises.map((exercise) => ({
     ...exercise,
-    selected: false, // Add a selected property and initialize it as false
+    selected: false,
+    duration: 0,
   }));
-  const [exercises, setExercises] = useState([...exercisesWithSelection]); // Initialize with the initial data
-  const [selectedExercises, setSelectedExercises] = useState([]);
+  const [exercises, setExercises] = useState<Exercise[]>([...exercisesWithSelection]);
+  const [workouts, setWorkouts] = useState<Workout[]>([]);
+  const [selectedExercises, setSelectedExercises] = useState<Exercise[]>([]);
+  const [temporaryDurations, setTemporaryDurations] = useState<Record<string, string>>({});
+
+
+   // Function to reset the component's state
+   const resetState = () => {
+    setExercises([...exercisesWithSelection]);
+    setSelectedExercises([]);
+    setWorkoutName("");
+  };
 
   const categories = Array.from(new Set(exercises.map((exercise) => exercise.category)));
 
-  const handleCategoryToggle = (category) => {
+  
+
+  const handleCategoryToggle = (category: string) => {
     if (expandedCategories.includes(category)) {
+      // If the category is in the expanded state, collapse it
       setExpandedCategories(expandedCategories.filter((cat) => cat !== category));
     } else {
+      // If the category is not in the expanded state, expand it
       setExpandedCategories([...expandedCategories, category]);
     }
   };
 
-  const isCategoryExpanded = (category) => expandedCategories.includes(category);
+  const isCategoryExpanded = (category: string) => expandedCategories.includes(category);
 
-  const handleDurationChange = (category, index, text) => {
+  const handleDurationChange = (category: string, index: number, text: string) => {
     const durationInMinutes = parseFloat(text);
     if (!isNaN(durationInMinutes)) {
-      const durationInMilliseconds = durationInMinutes * 60000; // 1 minute = 60000 milliseconds
+      const durationInMilliseconds = durationInMinutes * 60000;
       const updatedExercises = [...exercises];
       updatedExercises
         .filter((exercise) => exercise.category === category)
         .forEach((exercise, exerciseIndex) => {
           if (exerciseIndex === index) {
-            exercise.duration = durationInMilliseconds;
+            exercise.duration = durationInMilliseconds; // Update the exercise's duration in milliseconds
           }
         });
 
-      // Update the exercises state with the new exercise durations
+        setTemporaryDurations((prevDurations) => ({
+          ...prevDurations,
+          [`${category}-${index}`]: text,
+        }));
+  
       setExercises(updatedExercises);
     }
   };
+  
 
-  const handleExerciseSelection = (category, index) => {
+  const handleExerciseSelection = (category: string, index: number) => {
     const updatedExercises = [...exercises];
     updatedExercises
       .filter((exercise) => exercise.category === category)
       .forEach((exercise, exerciseIndex) => {
         if (exerciseIndex === index) {
-          exercise.selected = !exercise.selected; // Toggle the selected property
+          exercise.selected = !exercise.selected;
         }
       });
   
-    // Update the exercises state with the new exercise selection status
-    setExercises(updatedExercises);
+    setExercises(updatedExercises); // Update the state with the modified exercises
   };
+  
 
   const handleConfirmSelection = () => {
     const selected = exercises.filter((exercise) => exercise.selected);
     setSelectedExercises(selected);
   };
-  
-  const SelectedExercisesList = () => {
+
+  const SelectedExercisesList: React.FC = () => {
     return (
       <ScrollView>
         <Text style={styles.selectedExercisesTitle}>Selected Exercises:</Text>
@@ -76,13 +102,35 @@ const CustomWorkouts = ({ navigation }) => {
     );
   };
 
-  const [workoutName, setWorkoutName] = useState("");
+  const [workoutName, setWorkoutName] = useState<string>("");
 
-  const handleSaveWorkout = (workoutName) => {
+  const handleSaveWorkout = (workoutName: string) => {
     console.log(`Saving workout: ${workoutName}`);
     console.log("Selected exercises:", selectedExercises);
+  
+    // Generate a unique key for the new workout
+    const uniqueKey = Workouts.length; // You can use a more sophisticated method for generating keys if needed
+  
+    const savedWorkout: Workout = {
+      key: Workouts.length,
+      workout_name: workoutName,
+      exercises: selectedExercises,
+    };
+  
+    Workouts.push(savedWorkout);
+
+    console.log("Updated Workouts array:", Workouts);
+  
+    // Clear the selected exercises after saving
+    setSelectedExercises([]);
+  
+    resetState();
   };
   
+
+  
+  
+
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>Custom Workout System</Text>
@@ -107,22 +155,25 @@ const CustomWorkouts = ({ navigation }) => {
                   .map((exercise, index) => (
                     <View key={index} style={styles.exercise}>
                       <TouchableOpacity
-                        onPress={() => handleExerciseSelection(category, index)}
-                        style={styles.checkbox}
-                      >
-                        {exercise.selected ? (
-                          <Ionicons name="checkbox-outline" size={24} color="blue" />
-                        ) : (
-                          <Ionicons name="square-outline" size={24} color="black" />
-                        )}
-                      </TouchableOpacity>
+                      onPress={() => handleExerciseSelection(category, index)}
+                      style={styles.checkbox}
+                    >
+                      {exercise.selected ? (
+                        <Ionicons name="checkbox-outline" size={24} color="blue" />
+                      ) : (
+                        <Ionicons name="square-outline" size={24} color="black" />
+                      )}
+                    </TouchableOpacity>
                       <Text style={styles.exercise}>{exercise.name}</Text>
                       <TextInput
                         style={styles.durationInput}
                         placeholder="Duration (minutes)"
                         keyboardType="numeric"
+                        value={(exercise.duration / 60000).toString()} // Convert milliseconds to minutes for display
                         onChangeText={(text) => handleDurationChange(category, index, text)}
                       />
+
+
                     </View>
                   ))}
               </View>
@@ -135,6 +186,7 @@ const CustomWorkouts = ({ navigation }) => {
         >
           <Text style={styles.confirmButtonText}>Confirm Selection</Text>
         </TouchableOpacity>
+        <SelectedExercisesList />
         {selectedExercises.length > 0 && (
           <View>
             <TextInput
@@ -156,8 +208,8 @@ const CustomWorkouts = ({ navigation }) => {
       </ScrollView>
     </ScrollView>
   );
-
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -189,10 +241,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
   },
-  categoryHeaderExpanded: {
-    backgroundColor: "#e0e0e0",
-  },
-  checkbox:{
+  checkbox: {
     marginRight: 8,
   },
   exerciseList: {
@@ -242,10 +291,10 @@ const styles = StyleSheet.create({
   savedWorkoutName: {
     fontSize: 16,
     marginTop: 8,
-    color: "blue", // You can adjust the color as needed
+    color: "blue",
   },
   saveWorkoutButton: {
-    backgroundColor: "green", // Customize the button's background color
+    backgroundColor: "green",
     padding: 12,
     borderRadius: 8,
     alignItems: "center",
@@ -256,6 +305,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
   },
+  scrollContainer: {
+    flexGrow: 1,
+  },
 });
-
 export default CustomWorkouts;

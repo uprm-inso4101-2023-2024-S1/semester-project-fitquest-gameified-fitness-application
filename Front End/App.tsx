@@ -7,6 +7,7 @@ import { ProfilePage } from "./pages/ProfilePage";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import WorkoutPage from "./pages/WorkoutPage";
 import CustomWorkouts from "./pages/CustomWorkouts";
+import React from 'react';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
