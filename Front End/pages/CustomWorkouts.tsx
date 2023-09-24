@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, TextInput, ScrollView } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import { exercises as initialExercises } from '../assets/exercisesData';
+import { useNavigation } from "@react-navigation/native";
 
 const CustomWorkouts = ({ navigation }) => {
   //const [selectedBodyPart, setSelectedBodyPart] = useState(null);
@@ -74,8 +75,14 @@ const CustomWorkouts = ({ navigation }) => {
       </ScrollView>
     );
   };
-  
 
+  const [workoutName, setWorkoutName] = useState("");
+
+  const handleSaveWorkout = (workoutName) => {
+    console.log(`Saving workout: ${workoutName}`);
+    console.log("Selected exercises:", selectedExercises);
+  };
+  
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>Custom Workout System</Text>
@@ -102,13 +109,13 @@ const CustomWorkouts = ({ navigation }) => {
                       <TouchableOpacity
                         onPress={() => handleExerciseSelection(category, index)}
                         style={styles.checkbox}
-                        >
-                          {exercise.selected ? (
-                            <Ionicons name="checkbox-outline" size={24} color="blue" />
-                          ) : (
-                            <Ionicons name="square-outline" size={24} color="black" />
-                          )}
-                          </TouchableOpacity>
+                      >
+                        {exercise.selected ? (
+                          <Ionicons name="checkbox-outline" size={24} color="blue" />
+                        ) : (
+                          <Ionicons name="square-outline" size={24} color="black" />
+                        )}
+                      </TouchableOpacity>
                       <Text style={styles.exercise}>{exercise.name}</Text>
                       <TextInput
                         style={styles.durationInput}
@@ -125,13 +132,31 @@ const CustomWorkouts = ({ navigation }) => {
         <TouchableOpacity
           style={styles.confirmButton}
           onPress={handleConfirmSelection}
-          >
-            <Text style={styles.confirmButtonText}>Confirm Selection</Text>
-            </TouchableOpacity>
-          {selectedExercises.length > 0 && <SelectedExercisesList />}
+        >
+          <Text style={styles.confirmButtonText}>Confirm Selection</Text>
+        </TouchableOpacity>
+        {selectedExercises.length > 0 && (
+          <View>
+            <TextInput
+              style={styles.workoutNameInput}
+              placeholder="Enter Workout Name"
+              value={workoutName}
+              onChangeText={(text) => setWorkoutName(text)}
+            />
+            {workoutName !== "" && (
+              <TouchableOpacity
+                style={styles.saveWorkoutButton}
+                onPress={() => handleSaveWorkout(workoutName)}
+              >
+                <Text style={styles.saveWorkoutButtonText}>Save Workout</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        )}
       </ScrollView>
     </ScrollView>
   );
+
 };
 const styles = StyleSheet.create({
   container: {
@@ -206,9 +231,31 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     color: "green",
   },
-  
-  
-  
+  workoutNameInput: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 4,
+    padding: 8,
+    fontSize: 14,
+    marginTop: 16,
+  },
+  savedWorkoutName: {
+    fontSize: 16,
+    marginTop: 8,
+    color: "blue", // You can adjust the color as needed
+  },
+  saveWorkoutButton: {
+    backgroundColor: "green", // Customize the button's background color
+    padding: 12,
+    borderRadius: 8,
+    alignItems: "center",
+    marginTop: 16,
+  },
+  saveWorkoutButtonText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
 });
 
 export default CustomWorkouts;
