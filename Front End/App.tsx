@@ -7,6 +7,7 @@ import { ProfilePage } from "./pages/ProfilePage";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import WorkoutPage from "./pages/WorkoutPage";
 import CustomWorkouts from "./pages/CustomWorkouts";
+import SelectedWorkout from "./pages/SelectedWorkout";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -30,6 +31,7 @@ export default function App() {
         />
         <Stack.Screen name="Workouts" component={WorkoutPage} />
         <Stack.Screen name="CustomWorkout" component={CustomWorkouts} />
+        <Stack.Screen name="SelectedWorkout" component={SelectedWorkout} />
       </Stack.Navigator>
     </NavigationContainer>
   );
