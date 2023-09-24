@@ -4,13 +4,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { exercises as initialExercises } from '../assets/exercisesData';
 
 const CustomWorkouts = ({ navigation }) => {
-  const [selectedBodyPart, setSelectedBodyPart] = useState(null);
+  //const [selectedBodyPart, setSelectedBodyPart] = useState(null);
   const [expandedCategories, setExpandedCategories] = useState([]);
   const exercisesWithSelection = initialExercises.map((exercise) => ({
     ...exercise,
     selected: false, // Add a selected property and initialize it as false
   }));
   const [exercises, setExercises] = useState([...exercisesWithSelection]); // Initialize with the initial data
+  const [selectedExercises, setSelectedExercises] = useState([]);
 
   const categories = Array.from(new Set(exercises.map((exercise) => exercise.category)));
 
@@ -55,6 +56,25 @@ const CustomWorkouts = ({ navigation }) => {
     // Update the exercises state with the new exercise selection status
     setExercises(updatedExercises);
   };
+
+  const handleConfirmSelection = () => {
+    const selected = exercises.filter((exercise) => exercise.selected);
+    setSelectedExercises(selected);
+  };
+  
+  const SelectedExercisesList = () => {
+    return (
+      <View>
+        <Text style={styles.selectedExercisesTitle}>Selected Exercises:</Text>
+        {selectedExercises.map((exercise, index) => (
+          <Text key={index} style={styles.selectedExercise}>
+            {exercise.name}
+          </Text>
+        ))}
+      </View>
+    );
+  };
+  
 
   return (
     <View style={styles.container}>
@@ -102,6 +122,13 @@ const CustomWorkouts = ({ navigation }) => {
             )}
           </View>
         ))}
+        <TouchableOpacity
+          style={styles.confirmButton}
+          onPress={handleConfirmSelection}
+          >
+            <Text style={styles.confirmButtonText}>Confirm Selection</Text>
+            </TouchableOpacity>
+          {selectedExercises.length > 0 && <SelectedExercisesList />}
       </View>
     </View>
   );
@@ -157,6 +184,29 @@ const styles = StyleSheet.create({
     padding: 8,
     fontSize: 14,
   },
+  confirmButton: {
+    backgroundColor: "blue",
+    padding: 12,
+    borderRadius: 8,
+    alignItems: "center",
+    marginTop: 16,
+  },
+  confirmButtonText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  selectedExercisesTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginTop: 16,
+  },
+  selectedExercise: {
+    fontSize: 16,
+    marginBottom: 8,
+    color: "green",
+  },
+  
   
   
 });
