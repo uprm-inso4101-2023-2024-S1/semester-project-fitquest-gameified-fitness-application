@@ -27,9 +27,10 @@ export default function WorkoutPage({ navigation }: Props) {
   };
 
   const startWorkout = (workout: Workout) => {
-    // Handle starting the workout here
-    // For example, you can navigate to a workout timer screen
+    // Navigate to the SelectedWorkout page and pass the selected workout data
+    navigation.navigate("SelectedWorkout", { selectedWorkout: workout });
   };
+  
 
   return (
     <View style={styles.container}>
