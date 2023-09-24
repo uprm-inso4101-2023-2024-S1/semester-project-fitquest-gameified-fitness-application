@@ -6,7 +6,11 @@ import { exercises as initialExercises } from '../assets/exercisesData';
 const CustomWorkouts = ({ navigation }) => {
   const [selectedBodyPart, setSelectedBodyPart] = useState(null);
   const [expandedCategories, setExpandedCategories] = useState([]);
-  const [exercises, setExercises] = useState([...initialExercises]); // Initialize with the initial data
+  const exercisesWithSelection = initialExercises.map((exercise) => ({
+    ...exercise,
+    selected: false, // Add a selected property and initialize it as false
+  }));
+  const [exercises, setExercises] = useState([...exercisesWithSelection]); // Initialize with the initial data
 
   const categories = Array.from(new Set(exercises.map((exercise) => exercise.category)));
 
@@ -38,6 +42,20 @@ const CustomWorkouts = ({ navigation }) => {
     }
   };
 
+  const handleExerciseSelection = (category, index) => {
+    const updatedExercises = [...exercises];
+    updatedExercises
+      .filter((exercise) => exercise.category === category)
+      .forEach((exercise, exerciseIndex) => {
+        if (exerciseIndex === index) {
+          exercise.selected = !exercise.selected; // Toggle the selected property
+        }
+      });
+  
+    // Update the exercises state with the new exercise selection status
+    setExercises(updatedExercises);
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Custom Workout System</Text>
@@ -61,6 +79,16 @@ const CustomWorkouts = ({ navigation }) => {
                   .filter((exercise) => exercise.category === category)
                   .map((exercise, index) => (
                     <View key={index} style={styles.exercise}>
+                      <TouchableOpacity
+                        onPress={() => handleExerciseSelection(category, index)}
+                        style={styles.checkbox}
+                        >
+                          {exercise.selected ? (
+                            <Ionicons name="checkbox-outline" size={24} color="blue" />
+                          ) : (
+                            <Ionicons name="square-outline" size={24} color="black" />
+                          )}
+                          </TouchableOpacity>
                       <Text style={styles.exercise}>{exercise.name}</Text>
                       <TextInput
                         style={styles.durationInput}
@@ -112,6 +140,9 @@ const styles = StyleSheet.create({
   categoryHeaderExpanded: {
     backgroundColor: "#e0e0e0",
   },
+  checkbox:{
+    marginRight: 8,
+  },
   exerciseList: {
     padding: 16,
   },
@@ -126,6 +157,7 @@ const styles = StyleSheet.create({
     padding: 8,
     fontSize: 14,
   },
+  
   
 });
 
