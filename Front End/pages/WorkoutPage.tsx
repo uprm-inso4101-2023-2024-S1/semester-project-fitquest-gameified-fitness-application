@@ -3,7 +3,7 @@ import { View, Text, Button } from "react-native";
 export default function WorkoutPage({ navigation }) {
   return (
     <View>
-      <Text>Menu of Woorkouts and Button to custom Workout screen</Text>
+      <Text>Menu of Workouts and Button to custom Workout screen</Text>
       <Button
         title="Create Your Own"
         onPress={() => navigation.navigate("CustomWorkout")}

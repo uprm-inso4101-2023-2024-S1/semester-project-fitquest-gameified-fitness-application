@@ -22,6 +22,9 @@ const CustomWorkouts: React.FC = () => {
   const [workouts, setWorkouts] = useState<Workout[]>([]);
   const [selectedExercises, setSelectedExercises] = useState<Exercise[]>([]);
   const [temporaryDurations, setTemporaryDurations] = useState<Record<string, string>>({});
+  const [errorMsg, setErrorMsg] = useState<string>(""); // State for error messages
+  const [hasInvalidDurations, setHasInvalidDurations] = useState<boolean>(false);
+
 
 
    // Function to reset the component's state
@@ -66,6 +69,24 @@ const CustomWorkouts: React.FC = () => {
         }));
   
       setExercises(updatedExercises);
+      // Clear the hasInvalidDurations flag when a valid duration is entered
+      setHasInvalidDurations(false);
+      setErrorMsg(""); //Clear any previous error message
+    }else{
+       // Handle valid input times
+      setErrorMsg("Invalid duration. Please enter a valid time.");
+      setHasInvalidDurations(true);
+
+      // If the input is invalid, you can choose to clear the duration for this exercise
+      const updatedExercises = [...exercises];
+      updatedExercises
+      .filter((exercise) => exercise.category === category)
+      .forEach((exercise, exerciseIndex) => {
+        if (exerciseIndex === index) {
+          exercise.duration = 0;
+        }
+      });
+    setExercises(updatedExercises);
     }
   };
   
@@ -105,26 +126,53 @@ const CustomWorkouts: React.FC = () => {
   const [workoutName, setWorkoutName] = useState<string>("");
 
   const handleSaveWorkout = (workoutName: string) => {
-    console.log(`Saving workout: ${workoutName}`);
-    console.log("Selected exercises:", selectedExercises);
-  
-    // Generate a unique key for the new workout
-    const uniqueKey = Workouts.length; // You can use a more sophisticated method for generating keys if needed
-  
-    const savedWorkout: Workout = {
-      key: Workouts.length,
-      workout_name: workoutName,
-      exercises: selectedExercises,
-    };
-  
-    Workouts.push(savedWorkout);
 
-    console.log("Updated Workouts array:", Workouts);
+
+  if (hasInvalidDurations) {
+    // Display an error message for invalid durations
+    setErrorMsg("Some exercises have invalid durations. Please correct them.");
+    return;
+  }
+    if (selectedExercises.length === 0) {
+      // Handle the case where no exercises are selected and display an error message
+      setErrorMsg("Please select at least one exercise for the workout.");
+      return;
+    }
+
+    if (workoutName.trim() === "") {
+      // Handle the case where the workout name is empty and display an error message
+      setErrorMsg("Please enter a workout name.");
+      return;
+    }
+    //If everything is met, error message cleared
+    setErrorMsg("");
+
+    // Check if there are selected exercises and a non-empty workout name
+    if (selectedExercises.length > 0 && workoutName.trim() !== "") {
+      console.log(`Saving workout: ${workoutName}`);
+      console.log("Selected exercises:", selectedExercises);
+    
+      // Generate a unique key for the new workout
+      const uniqueKey = Workouts.length; // You can use a more sophisticated method for generating keys if needed
+    
+      const savedWorkout: Workout = {
+        key: Workouts.length,
+        workout_name: workoutName,
+        exercises: selectedExercises,
+      };
+    
+      Workouts.push(savedWorkout);
   
-    // Clear the selected exercises after saving
-    setSelectedExercises([]);
-  
-    resetState();
+      console.log("Updated Workouts array:", Workouts);
+    
+      // Clear the selected exercises after saving
+      setSelectedExercises([]);
+    
+      resetState();
+
+      // Clear any previous error message
+      setErrorMsg("");
+    }
   };
   
 
@@ -193,13 +241,24 @@ const CustomWorkouts: React.FC = () => {
               style={styles.workoutNameInput}
               placeholder="Enter Workout Name"
               value={workoutName}
-              onChangeText={(text) => setWorkoutName(text)}
+              onChangeText={(text) => {
+                setWorkoutName(text);
+                // Clear the error message when the user starts typing a valid workout name
+                if (errorMsg !== "" && text.trim() !== "") {
+                  setErrorMsg("");
+                }
+              }}
+              
             />
+            {errorMsg !== "" && (
+              <Text style={styles.errorMsg}>{errorMsg}</Text>
+            )}
             {workoutName !== "" && (
-              <TouchableOpacity
+                <TouchableOpacity
                 style={styles.saveWorkoutButton}
                 onPress={() => handleSaveWorkout(workoutName)}
-              >
+                disabled={errorMsg !== ""}
+                >
                 <Text style={styles.saveWorkoutButtonText}>Save Workout</Text>
               </TouchableOpacity>
             )}
@@ -307,6 +366,11 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flexGrow: 1,
+  },
+  errorMsg:{
+    color: "red",
+    fontWeight: "bold",
+    fontSize: 16,
   },
 });
 export default CustomWorkouts;
