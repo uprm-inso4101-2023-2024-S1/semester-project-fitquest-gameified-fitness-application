@@ -7,7 +7,12 @@ import { ProfilePage } from "./pages/ProfilePage";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import WorkoutPage from "./pages/WorkoutPage";
 import CustomWorkouts from "./pages/CustomWorkouts";
+
+import SelectedWorkout from "./pages/SelectedWorkout";
+import FinishedRoute from "./pages/FinishedRoute";
+
 import React from 'react';
+
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -26,11 +31,25 @@ export default function App() {
       <Stack.Navigator>
         <Stack.Screen
           name="Home"
-          options={{ title: "FitQuest" }}
+          options={{ headerShown: false }}
           component={Home}
         />
         <Stack.Screen name="Workouts" component={WorkoutPage} />
-        <Stack.Screen name="CustomWorkout" component={CustomWorkouts} />
+        <Stack.Screen
+          options={{ title: "Create your Own Workouts" }}
+          name="CustomWorkout"
+          component={CustomWorkouts}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="SelectedWorkout"
+          component={SelectedWorkout}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="FinishedRoute"
+          component={FinishedRoute}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
