@@ -34,6 +34,16 @@ export default function WorkoutPage({ navigation }: Props) {
     });
   };
 
+  function formatMilliseconds(num) {
+    let seconds = num / 1000
+    let minutes = 0
+    if (seconds >= 60) {
+      minutes = Math.floor(seconds / 60)
+      seconds = seconds % 60
+    }
+    return `0${minutes}`.slice(-2) + ':' + `0${seconds}`.slice(-2)
+  }
+
   return (
 
     <View style={styles.container}>
@@ -50,7 +60,10 @@ export default function WorkoutPage({ navigation }: Props) {
             <View
               style={{
                 padding: 16,
-                backgroundColor: isSelected ? "lightblue" : "white",
+                backgroundColor: "white",
+                borderColor: "#ccc",
+                borderWidth: 1,
+                borderRadius: 8,
                 marginBottom: 8,
               }}
             >
@@ -58,19 +71,18 @@ export default function WorkoutPage({ navigation }: Props) {
                 {item.workout_name}
               </Text>
               {isSelected && (
-                <View>
-                  <Text style={{ fontSize: 18, marginTop: 8 }}>Exercises:</Text>
+                <View style={styles.container}>
                   {item.exercises.map((exercise, index) => (
-                    <View key={index} style={{ marginLeft: 16 }}>
-                      <Text>
-                        Exercise {index + 1}: {exercise.name}
+                    <View key={index} style={{ margin: 8 }}>
+                      <Text style={{ backgroundColor: 'white', padding: 10, borderRadius: 8, borderWidth: 1, borderColor: "#ccc" }}>
+                        {exercise.name} for <Text style={{ fontWeight: "bold" }}>{formatMilliseconds(exercise.duration)}</Text>
                       </Text>
-                      <Text>Duration: {exercise.duration} ms</Text>
-                      <Text>Description: {exercise.description}</Text>
-                      <Text>GIF Link: {exercise.gif_link}</Text>
                     </View>
                   ))}
                   {/* Start Button for the workout */}
+                  <TouchableOpacity>
+                    
+                  </TouchableOpacity>
                   <Button
                     title="Start"
                     onPress={() => startWorkout(item, navigation)}

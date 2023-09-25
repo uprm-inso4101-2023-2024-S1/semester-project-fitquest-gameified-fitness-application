@@ -225,6 +225,15 @@ export default function WorkoutTimer({ selectedWorkout, navigation }: Props) {
     onFinish(selectedWorkout, exerciseIndex + 1, completed, navigation);
   };
 
+  function formatSeconds(num) {
+    let minutes = 0
+    if (num >= 60) {
+      minutes = Math.floor(num / 60)
+      num -= minutes * num
+    }
+    return `0${minutes}`.slice(-2) + ':' + `0${num}`.slice(-2)
+  }
+
   return (
     <View style={styles.container}>
       {/*Displays corresponding workout information*/}
@@ -232,7 +241,7 @@ export default function WorkoutTimer({ selectedWorkout, navigation }: Props) {
 
       {/*Displays timer with respective designs */}
       <View style={styles.timerContainer}>
-        <Text style={styles.timerText}> {timeRemaining} </Text>
+        <Text style={styles.timerText}> {`0${Math.floor(timeRemaining/60)}`.slice(-2) + ':' + `0${timeRemaining%60}`.slice(-2)} </Text>
       </View>
 
       {/*Displays the buttons with their respective designs*/}
