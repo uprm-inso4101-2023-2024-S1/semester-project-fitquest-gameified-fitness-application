@@ -35,9 +35,11 @@ export default function WorkoutPage({ navigation }: Props) {
   };
 
   return (
+
     <View style={styles.container}>
       <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 16 }}>
         Workout Page
+
       </Text>
 
       {/* Display the list of workouts using map */}

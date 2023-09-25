@@ -7,8 +7,12 @@ import { ProfilePage } from "./pages/ProfilePage";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import WorkoutPage from "./pages/WorkoutPage";
 import CustomWorkouts from "./pages/CustomWorkouts";
+
 import SelectedWorkout from "./pages/SelectedWorkout";
 import FinishedRoute from "./pages/FinishedRoute";
+
+import React from 'react';
+
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
