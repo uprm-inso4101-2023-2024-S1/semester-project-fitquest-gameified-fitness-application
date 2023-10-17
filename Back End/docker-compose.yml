@@ -1,0 +1,28 @@
+version: '3'
+services:
+  flask_app:
+    build:
+      #create image in the current file
+      context: .
+    ports:
+      - "5000:5000"
+    depends_on:
+      - postgres_DB
+    environment:
+      DB_HOST: postgres_DB
+      DB_PORT: 5432
+      DB_NAME: FitQuestDB
+      DB_USER: root
+      DB_PASSWORD: password
+    volumes:
+      - ./app:/app
+
+  postgres_DB:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: FitQuestDB
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+    ports:
+      #right port must always be 5432 to communicate with postgres container
+      - "5432:5432"
