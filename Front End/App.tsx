@@ -7,6 +7,8 @@ import { ProfilePage } from "./pages/ProfilePage";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import WorkoutPage from "./pages/WorkoutPage";
 import CustomWorkouts from "./pages/CustomWorkouts";
+import RoadMap from './components/RoadMap';
+import RoadMapWorkoutPage from "./pages/RoadMapWorkoutPage";
 
 import SelectedWorkout from "./pages/SelectedWorkout";
 import FinishedRoute from "./pages/FinishedRoute";
@@ -50,6 +52,12 @@ export default function App() {
           name="FinishedRoute"
           component={FinishedRoute}
         />
+        <Stack.Screen
+          name="RoadMapWorkout"
+          options={{ headerShown: false }}
+          component={RoadMapWorkoutPage}
+        />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
