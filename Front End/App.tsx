@@ -15,6 +15,7 @@ import React, { createContext, useContext, useState } from 'react';
 export const LevelContext = createContext({
     level: 0,
     xp: 0,
+    totalXp: 0,
     gainXp: (amount) => {},
 });
 
@@ -31,6 +32,7 @@ function Home() {
 
 export default function App() {
   
+  // Player level and xp logic 
   const [level, setLevel] = useState(1);
   const [xp, setXp] = useState(0);
   const difficulty = 100;
@@ -52,6 +54,7 @@ export default function App() {
     <LevelContext.Provider value={{
       level: level,
       xp: xp,
+      totalXp: difficulty*level,
       gainXp: gainXp,
     }}>
       <NavigationContainer>
