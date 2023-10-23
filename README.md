@@ -1,11 +1,11 @@
 ## Welcome to the FitQuest Repository
 
 ### Table of Contents
-[Project Description](https://github.com/uprm-inso4101-2023-2024-S1/semester-project-fitquest-gameified-fitness-application#project-description)
-[Development Guidelines](https://github.com/uprm-inso4101-2023-2024-S1/semester-project-fitquest-gameified-fitness-application#development-guidelines)
-[Installation](https://github.com/uprm-inso4101-2023-2024-S1/semester-project-fitquest-gameified-fitness-application#installation)
-[Usage](https://github.com/uprm-inso4101-2023-2024-S1/semester-project-fitquest-gameified-fitness-application#usage)
-[Configuration](https://github.com/uprm-inso4101-2023-2024-S1/semester-project-fitquest-gameified-fitness-application#configuration)
+[Project Description](#project-description)<br>
+[Development Guidelines](#development-guidelines)<br>
+[Installation](#installation)<br>
+[Usage](#usage)<br>
+[Configuration](#configuration)<br>
 
 ### Project Description
 
@@ -27,7 +27,7 @@ First you will need to make sure you have `cd` into FitQuest's `Front End` folde
 npm i
 ```
 
-After `npm i`command runs, in order to run the FitQuest app locally, run the following command.
+After `npm i` command runs, in order to run the FitQuest app locally, run the following command.
 
 ```
 npm start
@@ -35,11 +35,11 @@ npm start
 
 This command will run Expo locally. With Expo, developers are able to develop and deploy apps natively on all devices. For our current case, we will use Expo to run a live environment locally on our mobile device or on web for FirQuest app to run.
 
-##### Running Expo on our Mobile Device
+**Running Expo on our Mobile Device**
 1. Download Expo Go app on Google Play Store or App Store.
 2. Once Expo Go app has downloaded, scan the QR code displayed on the terminal you ran `npm start` on with your phone's camera.
 3. This should redirect you to the Expo Go app which should load the FitQuest app. Any changes made on the code should update automatically.
 
-##### Running Expo on our Web Browser
+**Running Expo on our Web Browser**
 To run FitQuest directly on your computer's web browser, press 'w' after `npm start` command executes. Wait some seconds and you will be redirected to your web browser.
 
