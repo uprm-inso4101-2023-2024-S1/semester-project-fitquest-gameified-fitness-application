@@ -1,26 +1,26 @@
-## Welcome to the FitQuest Repository
+# Welcome to the FitQuest Repository
 
-### Table of Contents
+## Table of Contents
 [Project Description](#project-description)<br>
 [Development Guidelines](#development-guidelines)<br>
 [Installation](#installation)<br>
 [Usage](#usage)<br>
 [Configuration](#configuration)<br>
 
-### Project Description
+## Project Description
 
 
-### Development Guidelines
+## Development Guidelines
 - Always create a new branch for any feature not matter the size.
 - To merge the changes create a pull request that will be verified by the team leader and other members.
 - Create pull requests merging to the beta branch.
 - Use descriptive titles for the commits and PRs. Write brief descriptions on the PRs of the changes made.
 - **Never commit changes directly to main.**
 
-### Installation
+## Installation
 If you want to contribute to FitQuest's development this section is for you. Here we will walk you through how you can initialize the FitQuest repository on your local machine. If you haven't already, remember to clone our repository.
 
-#### Developing on FitQuest Front End using React-Native
+### Developing on FitQuest Front End using React-Native
 First you will need to make sure you have `cd` into FitQuest's `Front End` folder located at the root directory. Afterwards, run the following command to install all dependencies listed on the project's `package.json` folder. This are necessary for the project to work correctly.
 
 ```
