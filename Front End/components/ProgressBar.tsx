@@ -3,7 +3,6 @@ import { View, Text, Button, StyleSheet, Animated, Dimensions } from 'react-nati
 import { LevelContext } from '../App';
 
 // BUGS
-// barra tiene overflow
 // barra no se ve linda en roadmap page
 
 const styles = StyleSheet.create({
@@ -12,13 +11,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         height: 20,
         margin: 20,
-        overflow: 'hidden',
+        flexWrap: 'nowrap',
+        justifyContent: 'flex-start',
     },
     barContainer: {
-        backgroundColor: '#ddd',
-        height: '100%'
+        height: 20, 
+        backgroundColor: '#ccc',
+        flexGrow: 8,
     },
     levelContainer: {
+        justifyContent: 'center',
         padding: 8,
     },
     levelText: {
@@ -55,12 +57,12 @@ export default function ProgressBar({ currentXp, totalXp }) {
     }, [currentXp, totalXp]);
 
     return (
-        <View style={[styles.container]}>
+        <View style={[styles.container]} >
             <View style={styles.levelContainer}>
                 <Text style={styles.levelText}>Level {level}</Text>
             </View>
             {/* XP Bar */}
-            <View style={[{height: 20}, {width: '100%'}, {backgroundColor: '#ccc'}]} ref={containerRef}>
+            <View style={styles.barContainer} ref={containerRef}>
                 <Animated.View style={[styles.bar, { width: progress }]} />
             </View>
         </View>
