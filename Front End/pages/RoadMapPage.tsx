@@ -1,5 +1,5 @@
-import React from "react";
-import { View, Button, StyleSheet } from "react-native";
+import React, { useContext } from "react";
+import { View, Button, StyleSheet, Text } from "react-native";
 
 export const RoadMapPage = ({ navigation }) => {
   return (

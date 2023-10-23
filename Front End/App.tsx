@@ -7,12 +7,16 @@ import { ProfilePage } from "./pages/ProfilePage";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import WorkoutPage from "./pages/WorkoutPage";
 import CustomWorkouts from "./pages/CustomWorkouts";
-
 import SelectedWorkout from "./pages/SelectedWorkout";
 import FinishedRoute from "./pages/FinishedRoute";
+// import { LevelContext } from "./components/LevelContext";
+import React, { createContext, useContext, useState } from 'react';
 
-import React from 'react';
-
+export const LevelContext = createContext({
+    level: 0,
+    xp: 0,
+    gainXp: (amount) => {},
+});
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -26,32 +30,56 @@ function Home() {
 }
 
 export default function App() {
+  
+  const [level, setLevel] = useState(1);
+  const [xp, setXp] = useState(0);
+  const difficulty = 100;
+  
+  const gainXp = (amount) => {
+    setXp(xp + amount);
+    levelUp();
+  };
+  
+  const levelUp = () => {
+    if (xp >= difficulty*level) {
+      setLevel(level + 1);
+      setXp(0);
+    }
+  };
+  
+
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Home"
-          options={{ headerShown: false }}
-          component={Home}
-        />
-        <Stack.Screen name="Workouts" component={WorkoutPage} />
-        <Stack.Screen
-          options={{ title: "Create your Own Workouts" }}
-          name="CustomWorkout"
-          component={CustomWorkouts}
-        />
-        <Stack.Screen
-          options={{ headerShown: false }}
-          name="SelectedWorkout"
-          component={SelectedWorkout}
-        />
-        <Stack.Screen
-          options={{ headerShown: false }}
-          name="FinishedRoute"
-          component={FinishedRoute}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <LevelContext.Provider value={{
+      level: level,
+      xp: xp,
+      gainXp: gainXp,
+    }}>
+      <NavigationContainer>
+        <Stack.Navigator>
+            <Stack.Screen
+              name="Home"
+              options={{ headerShown: false }}
+              component={Home}
+            />
+            <Stack.Screen name="Workouts" component={WorkoutPage} />
+            <Stack.Screen
+              options={{ title: "Create your Own Workouts" }}
+              name="CustomWorkout"
+              component={CustomWorkouts}
+            />
+            <Stack.Screen
+              options={{ headerShown: false }}
+              name="SelectedWorkout"
+              component={SelectedWorkout}
+            />
+            <Stack.Screen
+              options={{ headerShown: false }}
+              name="FinishedRoute"
+              component={FinishedRoute}
+            />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </LevelContext.Provider>
   );
 }
 

@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { View, Text, Button, TouchableOpacity, StyleSheet } from "react-native";
 import { Workouts } from "../assets/workoutData";
+import { level } from "../assets/levelData";
+import { LevelContext } from "../App";
 
 interface Exercise {
   name: string;
@@ -44,6 +46,8 @@ export default function WorkoutPage({ navigation }: Props) {
     return `0${minutes}`.slice(-2) + ':' + `0${seconds}`.slice(-2)
   }
 
+  const {level, xp, gainXp} = useContext(LevelContext)
+
   return (
 
     <View style={styles.container}>
@@ -51,6 +55,9 @@ export default function WorkoutPage({ navigation }: Props) {
         Workout Page
 
       </Text>
+
+      <Text>{level}</Text>
+      <Button title="XP" onPress={() => {gainXp(10)}}></Button>
 
       {/* Display the list of workouts using map */}
       {Workouts.map((item) => {
