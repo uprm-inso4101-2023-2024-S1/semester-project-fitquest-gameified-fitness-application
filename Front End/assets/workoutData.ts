@@ -22,9 +22,21 @@ export let Workouts: Workout[] = [
       return [
         getRandomExercisesFromCategory("arms"),
         getRandomExercisesFromCategory("legs"),
-        getRandomExercisesFromCategory("core"),
+        getRandomExercisesFromCategory("abs"),
         getRandomExercisesFromCategory("back")
       ].filter(Boolean) as Exercise[]; // filter out undefined values so we dont get 'undefined' on the exercises list
+    }
+  },
+  {
+    key: 1,
+    workout_name: "leg hell",
+    get exercises() {
+      let arr = Array(10);
+
+      for(let i = 0; i < arr.length; i++) {
+        arr[i] = getRandomExercisesFromCategory("legs");
+      };
+      return arr;
     }
   }
 ];

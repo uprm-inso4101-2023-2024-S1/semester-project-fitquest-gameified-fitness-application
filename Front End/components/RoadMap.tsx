@@ -27,9 +27,9 @@ class RoadMap extends Component<RoadMapProps, RoadMapState> {
         this.state = {
             xp: 0, // Initialize XP to 0
             lvl: 1, //Initialize lvl to 1
-            stations: [ // Initialize the stations
-                { id: 1, completed: false, locked: false, workoutKey: 1 },
-                { id: 2, completed: false, locked: true, workoutKey: 2 },
+            stations: [ // Initialize the stations | Needs to fix "locked" so it changes once it finish the workout
+                { id: 1, completed: true, locked: false, workoutKey: 1 },
+                { id: 2, completed: false, locked: false, workoutKey: 2 },
                 { id: 3, completed: false, locked: true, workoutKey: 3 },
                 { id: 4, completed: false, locked: true, workoutKey: 4 },
                 { id: 5, completed: false, locked: true, workoutKey: 5 },
