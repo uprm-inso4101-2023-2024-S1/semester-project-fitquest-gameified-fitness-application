@@ -1,4 +1,4 @@
-import React, { useContext, Component, useState } from "react";
+import React, { useContext, Component, useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -29,8 +29,8 @@ export const RoadMap = ({ navigation }) => {
   const [lvl, setLvl] = useState(level);
   const [stations, setStations] = useState([
     // Initialize the stations | Needs to fix "locked" so it changes once it finish the workout
-    { id: 1, completed: true, locked: false, workoutKey: 1 },
-    { id: 2, completed: false, locked: false, workoutKey: 2 },
+    { id: 1, completed: false, locked: false, workoutKey: 1 },
+    { id: 2, completed: false, locked: true, workoutKey: 2 },
     { id: 3, completed: false, locked: true, workoutKey: 3 },
     { id: 4, completed: false, locked: true, workoutKey: 4 },
     { id: 5, completed: false, locked: true, workoutKey: 5 },
@@ -62,13 +62,39 @@ export const RoadMap = ({ navigation }) => {
     setStations(updatedStations);
   }
 
+  function complete(stationId) {
+    const updatedStations = stations.map((s) => {
+      if (s.id == stationId) {
+        s.completed = true;
+      }
+      return s;
+    });
+    setStations(updatedStations);
+  }
+  const stationRefresh = () => {
+    const updatedStations = stations.map((s) => {
+      if (s.id < level) {
+        s.completed = true;
+        s.locked = false;
+      }
+      if (s.id == level) {
+        s.locked = false;
+      }
+      return s;
+    });
+    setStations(updatedStations);
+  };
   //Function that can be modified to change the funcionality of each of the stations
   const stationSelect = (stationId) => {
     const station = stations.find((s) => s.id == stationId);
     // Verifies if the station that was pressed is locked, if locked it tells the user what to do to unlock it
     if (station.locked) {
       // If the station's level is less than or equal to the current level, unlock it
-      if (station.id <= lvl) {
+      if (station.id < lvl) {
+        unlock(stationId);
+        complete(station.id);
+      }
+      if (station.id == lvl) {
         unlock(stationId);
       } else {
         Alert.alert(
@@ -104,39 +130,69 @@ export const RoadMap = ({ navigation }) => {
     console.log("Right button pressed");
   };
 
-  function renderStationButton(station) {
-    let buttonContent;
+  //   function renderStationButton(station) {
+  //     let buttonContent;
 
-    if (station.locked) {
-      buttonContent = <Icon name="lock" size={32} color="white" />;
-    } else if (station.completed) {
-      buttonContent = <Text style={styles.buttonText}>✓ {station.id}</Text>; // Marca de verificación para estaciones completadas
-    } else {
-      buttonContent = <Text style={styles.buttonText}>{station.id}</Text>;
-    }
+  //     if (station.locked) {
+  //       buttonContent = <Icon name="lock" size={32} color="white" />;
+  //     } else if (station.completed) {
+  //       buttonContent = <Text style={styles.buttonText}>✓ {station.id}</Text>; // Marca de verificación para estaciones completadas
+  //     } else {
+  //       buttonContent = <Text style={styles.buttonText}>{station.id}</Text>;
+  //     }
 
-    return (
-      <TouchableOpacity
-        key={station.id}
-        style={
-          station.locked
-            ? styles.lockedButton
-            : station.completed
-            ? styles.completedButton
-            : styles.incompleteButton
-        }
-        onPress={() => stationSelect(station.id)}
-      >
-        {buttonContent}
-      </TouchableOpacity>
-    );
-  }
+  //     return (
+  //       <TouchableOpacity
+  //         key={station.id}
+  //         style={
+  //           station.locked
+  //             ? styles.lockedButton
+  //             : station.completed
+  //             ? styles.completedButton
+  //             : styles.incompleteButton
+  //         }
+  //         onPress={() => stationSelect(station.id)}
+  //       >
+  //         {buttonContent}
+  //       </TouchableOpacity>
+  //     );
+  //   }
+
+  useEffect(stationRefresh, [...stations]);
 
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Road Map</Text>
       <ScrollView style={styles.scrollContainer}>
-        {stations.map((station) => renderStationButton(station))}
+        {stations.map((station) => {
+          let buttonContent;
+
+          if (station.locked) {
+            buttonContent = <Icon name="lock" size={32} color="white" />;
+          } else if (station.completed) {
+            buttonContent = (
+              <Text style={styles.buttonText}>✓ {station.id}</Text>
+            ); // Marca de verificación para estaciones completadas
+          } else {
+            buttonContent = <Text style={styles.buttonText}>{station.id}</Text>;
+          }
+
+          return (
+            <TouchableOpacity
+              key={station.id}
+              style={
+                station.locked
+                  ? styles.lockedButton
+                  : station.completed
+                  ? styles.completedButton
+                  : styles.incompleteButton
+              }
+              onPress={() => stationSelect(station.id)}
+            >
+              {buttonContent}
+            </TouchableOpacity>
+          );
+        })}
       </ScrollView>
       <View style={styles.xpContainer}>
         <View style={[styles.xpBar, { width: xpBarWidth }]}></View>
