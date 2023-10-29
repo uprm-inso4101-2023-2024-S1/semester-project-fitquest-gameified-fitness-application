@@ -29,16 +29,16 @@ export const RoadMap = ({ navigation }) => {
   const [lvl, setLvl] = useState(level);
   const [stations, setStations] = useState([
     // Initialize the stations | Needs to fix "locked" so it changes once it finish the workout
-    { id: 0, completed: true, locked: false, workoutKey: 1 },
-    { id: 1, completed: false, locked: false, workoutKey: 2 },
-    { id: 2, completed: false, locked: true, workoutKey: 3 },
-    { id: 3, completed: false, locked: true, workoutKey: 4 },
-    { id: 4, completed: false, locked: true, workoutKey: 5 },
-    { id: 5, completed: false, locked: true, workoutKey: 6 },
-    { id: 6, completed: false, locked: true, workoutKey: 7 },
-    { id: 7, completed: false, locked: true, workoutKey: 8 },
-    { id: 8, completed: false, locked: true, workoutKey: 9 },
-    { id: 9, completed: false, locked: true, workoutKey: 10 },
+    { id: 1, completed: true, locked: false, workoutKey: 1 },
+    { id: 2, completed: false, locked: false, workoutKey: 2 },
+    { id: 3, completed: false, locked: true, workoutKey: 3 },
+    { id: 4, completed: false, locked: true, workoutKey: 4 },
+    { id: 5, completed: false, locked: true, workoutKey: 5 },
+    { id: 6, completed: false, locked: true, workoutKey: 6 },
+    { id: 7, completed: false, locked: true, workoutKey: 7 },
+    { id: 8, completed: false, locked: true, workoutKey: 8 },
+    { id: 9, completed: false, locked: true, workoutKey: 9 },
+    { id: 10, completed: false, locked: true, workoutKey: 10 },
   ]);
   const maxXpLvl = 500; // Maximum value of xp per level
   const xpBarWidth = (XP / maxXpLvl) * 85;
@@ -56,11 +56,9 @@ export const RoadMap = ({ navigation }) => {
     const updatedStations = stations.map((station) => {
       if (station.id == stationId && station.locked) {
         station.locked = false;
-      } else {
-        return station;
       }
+      return station;
     });
-    console.log(updatedStations);
     setStations(updatedStations);
   }
 
