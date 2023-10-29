@@ -243,6 +243,11 @@ export default function WorkoutTimer({ selectedWorkout, navigation }: Props) {
     return `0${minutes}`.slice(-2) + ':' + `0${num}`.slice(-2)
   }
 
+  const [workoutName, setWorkoutName] = useState(selectedWorkout.exercises[exerciseIndex].name)
+  useEffect(() => {
+    setWorkoutName(selectedWorkout.exercises[exerciseIndex].name)
+  }, [exerciseIndex])
+
   return (
     <View style={styles.container}>
       {/*Displays corresponding workout information*/}
@@ -286,7 +291,7 @@ export default function WorkoutTimer({ selectedWorkout, navigation }: Props) {
       <View style={styles.gifContainer}>
         <Text style={styles.ExerciseName}>
           {" "}
-          {"Current Exercise:"} {selectedWorkout.exercises[exerciseIndex].name}{" "}
+          {"Current Exercise:"} {workoutName}{" "}
         </Text>
         <Text style={styles.gifText}> {"[Insert workout GIF Here]"} </Text>
       </View>
