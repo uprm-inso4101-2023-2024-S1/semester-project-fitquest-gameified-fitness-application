@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+import React, { useContext, Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { LevelContext } from "../App";
 
 // Propierty types
 interface RoadMapProps {
@@ -131,6 +132,9 @@ class RoadMap extends Component<RoadMapProps, RoadMapState> {
     }
 
     render() {
+
+        
+
         const maxXpLvl = 500; // Maximum value of xp per level
         const xpBarWidth = (this.state.xp / maxXpLvl) * 85;
 

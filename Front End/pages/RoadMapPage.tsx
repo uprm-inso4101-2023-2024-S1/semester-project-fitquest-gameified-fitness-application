@@ -10,8 +10,11 @@ export const RoadMapPage = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <ProgressBar totalXp={totalXp} currentXp={xp} />
-      <RoadMap navigation={navigation} />
       <View style={styles.roadMapContainer}>
+        {/* <View style={styles.progressBar}> */}
+
+        {/* </View> */}
+        <RoadMap navigation={navigation} />
         <Button
           title="Workouts"
           onPress={() => navigation.navigate("Workouts")}
@@ -24,6 +27,9 @@ export const RoadMapPage = ({ navigation }) => {
 const styles = StyleSheet.create({
   container:{
     flex: 1,
+  },
+  progressBar: {
+    width: '100%',
   },
   roadMapContainer: {
     flex: 1,
