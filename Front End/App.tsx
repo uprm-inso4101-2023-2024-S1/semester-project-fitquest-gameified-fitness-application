@@ -30,8 +30,8 @@ export default function App() {
   const [xp, setXp] = useState(0);
   const difficulty = 100;
 
-  const gainXp = (amount) => {
-    setXp(xp + amount);
+  const gainXp = (amount: number) => {
+    setXp((prevxp) => prevxp + amount);
     levelUp();
   };
 

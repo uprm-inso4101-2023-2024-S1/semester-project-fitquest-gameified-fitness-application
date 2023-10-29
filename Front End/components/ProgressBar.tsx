@@ -44,7 +44,7 @@ export default function ProgressBar({ currentXp, totalXp }) {
                 if (width > 100) {
                     newWidth = (currentXp / totalXp) * width;
                 } else {
-                    newWidth = currentXp * (totalXp / 100);
+                    newWidth = (currentXp / totalXp) * 100;
                 };
 
                 Animated.timing(progress, {

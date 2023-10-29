@@ -9,7 +9,9 @@ export const RoadMapPage = ({ navigation }) => {
   
   return (
     <View style={styles.container}>
-      <ProgressBar totalXp={totalXp} currentXp={xp} />
+      <View style={styles.progressBar}>
+        <ProgressBar totalXp={totalXp} currentXp={xp} />
+      </View>
       <View style={styles.roadMapContainer}>
         {/* <View style={styles.progressBar}> */}
 
@@ -29,6 +31,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   progressBar: {
+    flexWrap: 'nowrap',
     width: '100%',
   },
   roadMapContainer: {

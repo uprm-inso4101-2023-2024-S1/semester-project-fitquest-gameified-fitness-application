@@ -12,7 +12,7 @@ export const exercisesData: Exercise[] = [
   {
     name: "Overhead Press",
     category: "arms",
-    duration: 60000,
+    duration: 1000,
     selected: false,
     description:
       "A compound exercise that targets the shoulders and triceps while also engaging the core.",
@@ -22,7 +22,7 @@ export const exercisesData: Exercise[] = [
   {
     name: "Bicep Curl",
     category: "arms",
-    duration: 60000,
+    duration: 1000,
     selected: false,
     description:
       "An isolation exercise for the biceps, usually performed with dumbbells.",
@@ -32,7 +32,7 @@ export const exercisesData: Exercise[] = [
   {
     name: "Tricep Dip",
     category: "arms",
-    duration: 60000,
+    duration: 1000,
     selected: false,
     description:
       "Targets the triceps and can be done using parallel bars or a sturdy surface.",
@@ -42,7 +42,7 @@ export const exercisesData: Exercise[] = [
   {
     name: "Squat",
     category: "legs",
-    duration: 60000,
+    duration: 1000,
     selected: false,
     description:
       "A compound lower body exercise that targets the quadriceps, hamstrings, and glutes.",
@@ -52,7 +52,7 @@ export const exercisesData: Exercise[] = [
   {
     name: "Lunges",
     category: "legs",
-    duration: 60000,
+    duration: 1000,
     selected: false,
     description:
       "A unilateral leg exercise that strengthens the quadriceps and glutes.",
@@ -62,7 +62,7 @@ export const exercisesData: Exercise[] = [
   {
     name: "Deadlift",
     category: "legs",
-    duration: 60000,
+    duration: 1000,
     selected: false,
     description:
       "A powerful compound exercise that targets the lower back, hamstrings, and glutes.",
@@ -72,7 +72,7 @@ export const exercisesData: Exercise[] = [
   {
     name: "Pull-Up",
     category: "back",
-    duration: 60000,
+    duration: 1000,
     selected: false,
     description:
       "A bodyweight exercise that targets the back, specifically the lats.",
@@ -82,7 +82,7 @@ export const exercisesData: Exercise[] = [
   {
     name: "Rowing",
     category: "back",
-    duration: 60000,
+    duration: 1000,
     selected: false,
     description:
       "A machine or barbell exercise that works the upper back and traps.",
@@ -92,7 +92,7 @@ export const exercisesData: Exercise[] = [
   {
     name: "Lat Pulldown",
     category: "back",
-    duration: 60000,
+    duration: 1000,
     selected: false,
     description:
       "An exercise that targets the latissimus dorsi muscles using a cable machine.",
@@ -102,7 +102,7 @@ export const exercisesData: Exercise[] = [
   {
     name: "Crunches",
     category: "abs",
-    duration: 60000,
+    duration: 1000,
     selected: false,
     description:
       "An abdominal exercise that helps strengthen the rectus abdominis.",
@@ -112,7 +112,7 @@ export const exercisesData: Exercise[] = [
   {
     name: "Plank",
     category: "abs",
-    duration: 60000,
+    duration: 1000,
     selected: false,
     description:
       "A core-strengthening exercise that engages the entire abdominal region.",
@@ -122,7 +122,7 @@ export const exercisesData: Exercise[] = [
   {
     name: "Russian Twists",
     category: "abs",
-    duration: 60000,
+    duration: 1000,
     selected: false,
     description: "An exercise that targets the obliques and core muscles.",
     gif_link: "", // Added gif_link as an empty string
