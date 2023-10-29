@@ -20,10 +20,13 @@ interface Workout {
 
 interface Props {
   navigation: any; // Adjust the type based on your navigation setup
+  route: any; // Adjust the type based on your navigation setup
 }
 
-export default function WorkoutPage({ navigation }: Props) {
-  const [selectedWorkout, setSelectedWorkout] = useState<Workout | null>(null);
+export default function WorkoutPage({ navigation, route }: Props) {
+  const passedWorkoutKey = route.params?.selectedWorkoutKey;
+  const defaultWorkout = passedWorkoutKey ? Workouts.find(w => w.key === passedWorkoutKey) : null;
+  const [selectedWorkout, setSelectedWorkout] = useState<Workout | null>(defaultWorkout);
 
   const selectWorkout = (workout: Workout) => {
     setSelectedWorkout(workout === selectedWorkout ? null : workout);
@@ -89,7 +92,7 @@ export default function WorkoutPage({ navigation }: Props) {
                   ))}
                   {/* Start Button for the workout */}
                   <TouchableOpacity>
-                    
+
                   </TouchableOpacity>
                   <Button
                     title="Start"
