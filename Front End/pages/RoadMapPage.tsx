@@ -8,16 +8,22 @@ export const RoadMapPage = ({ navigation }) => {
   
   return (
     <View style={styles.container}>
+      <ProgressBar totalXp={totalXp} currentXp={xp}/>
+    <View style={styles.roadMapContainer}>
       <Button
         title="Workouts"
         onPress={() => navigation.navigate("Workouts")}
       />
     </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  container:{
+    flex: 1,
+  },
+  roadMapContainer: {
     flex: 1,
     alignItems: "center",
   },

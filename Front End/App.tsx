@@ -22,12 +22,37 @@ export const LevelContext = createContext({
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 function Home() {
+  const [level, setLevel] = useState(1);
+  const [xp, setXp] = useState(0);
+  const difficulty = 100;
+  
+  const gainXp = (amount) => {
+    setXp(xp + amount);
+    levelUp();
+  };
+  
+  const levelUp = () => {
+    if (xp >= difficulty*level) {
+      setLevel(level + 1);
+      setXp(0);
+    }
+  }
   return (
-    <Tab.Navigator>
+    <LevelContext.Provider value={{
+      level: level,
+      xp: xp,
+      totalXp: difficulty*level,
+      gainXp: gainXp,
+    }}>
+      <Tab.Navigator>
       <Tab.Screen name="Roadmap" component={RoadMapPage} />
       <Tab.Screen name="Profile" component={ProfilePage} />
     </Tab.Navigator>
+    </LevelContext.Provider>
+    
+    
   );
+  
 }
 
 export default function App() {
