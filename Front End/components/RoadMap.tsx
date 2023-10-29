@@ -68,7 +68,7 @@ export const RoadMap = ({ navigation }) => {
     // Verifies if the station that was pressed is locked, if locked it tells the user what to do to unlock it
     if (station.locked) {
       // If the station's level is less than or equal to the current level, unlock it
-      if (station.id <= lvl - 1) {
+      if (station.id <= lvl) {
         unlock(stationId);
       } else {
         Alert.alert(
