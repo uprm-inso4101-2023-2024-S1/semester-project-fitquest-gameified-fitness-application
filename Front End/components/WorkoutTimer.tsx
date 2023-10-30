@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
+import { useLevelContext } from "./LevelContextProvider";
 
 //variable for screen dimensions
 const screen = Dimensions.get("window");
@@ -142,6 +143,7 @@ export default function WorkoutTimer({ selectedWorkout, navigation }: Props) {
   const [exerciseIndex, setExerciseIndex] = useState<number>(0);
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [completed, setCompleted] = useState<boolean>(false);
+  const { level, xp, totalXp, gainXp } = useLevelContext();
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -172,8 +174,10 @@ export default function WorkoutTimer({ selectedWorkout, navigation }: Props) {
           if (prevTime > 0) {
             return prevTime - 1;
           } else {
-            // Move to the next exercise when the current one finishes
+            // Move to the next exercise when the current one finishes and increase xp
             clearInterval(timerRef.current as NodeJS.Timeout);
+            gainXp(10)
+      
 
             if (exerciseIndex + 1 < selectedWorkout.exercises.length) {
               // If there are more exercises, move to the next exercise
