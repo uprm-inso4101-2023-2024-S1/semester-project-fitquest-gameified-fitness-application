@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { View, Text, Button, TouchableOpacity, StyleSheet } from "react-native";
 import { Workouts } from "../assets/workoutData";
 // import { level } from "../assets/levelData";
-import { LevelContext } from "../App";
+import { useLevelContext } from '../components/LevelContextProvider';
 import ProgressBar from "../components/ProgressBar";
 
 interface Exercise {
@@ -47,7 +47,7 @@ export default function WorkoutPage({ navigation }: Props) {
     return `0${minutes}`.slice(-2) + ':' + `0${seconds}`.slice(-2)
   }
 
-  const {level, xp, totalXp, gainXp} = useContext(LevelContext)
+  const { level, xp, totalXp, gainXp } = useLevelContext();
 
   return (
 
