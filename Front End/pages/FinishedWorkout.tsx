@@ -1,6 +1,7 @@
 import { View, Text, Button, StyleSheet } from "react-native";
 
 import React from "react";
+import { useLevelContext } from "../components/LevelContextProvider";
 
 interface Workout {
   workout_name: string;
@@ -31,11 +32,12 @@ export default function FinishedWorkout({
   const handleExit = () => {
     navigation.navigate("Home");
   };
+  const { level, xp, totalXp, gainXp } = useLevelContext();
 
   return (
     <View style={styles.container}>
       <Text style={styles.message}>
-        {completed ? "Congrats" : "Better Luck Next Time"}
+      {completed ? `Congrats you gained: ${finishedSets * 10} xp` : ''}
       </Text>
       <Text style={styles.workoutName}>{finishedWorkout.workout_name}</Text>
       <Text
