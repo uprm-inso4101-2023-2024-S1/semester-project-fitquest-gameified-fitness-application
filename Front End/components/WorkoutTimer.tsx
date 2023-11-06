@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
+import { LevelContext } from "../App";
 
 //variable for screen dimensions
 const screen = Dimensions.get("window");
@@ -142,6 +143,7 @@ export default function WorkoutTimer({ selectedWorkout, navigation }: Props) {
   const [exerciseIndex, setExerciseIndex] = useState<number>(0);
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [completed, setCompleted] = useState<boolean>(false);
+  const {level, xp, totalXp, gainXp} = useContext(LevelContext);
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -151,6 +153,7 @@ export default function WorkoutTimer({ selectedWorkout, navigation }: Props) {
     completed,
     navigation
   ) => {
+    gainXp(12);
     navigation.navigate("FinishedRoute", {
       selectedWorkout,
       totalSets,
@@ -166,6 +169,13 @@ export default function WorkoutTimer({ selectedWorkout, navigation }: Props) {
   };
 
   useEffect(() => {
+    if (isRunning)
+      gainXp(10)
+  }, [exerciseIndex])
+
+  console.log(xp)
+
+  useEffect(() => {
     if (isRunning) {
       timerRef.current = setInterval(() => {
         setTimeRemaining((prevTime) => {
@@ -174,18 +184,17 @@ export default function WorkoutTimer({ selectedWorkout, navigation }: Props) {
           } else {
             // Move to the next exercise when the current one finishes
             clearInterval(timerRef.current as NodeJS.Timeout);
-
             if (exerciseIndex + 1 < selectedWorkout.exercises.length) {
               // If there are more exercises, move to the next exercise
               setExerciseIndex((prevIndex) => prevIndex + 1);
               return (
                 selectedWorkout.exercises[exerciseIndex + 1].duration / 1000
-              );
-            } else {
-              // If all exercises are done, finish the workout
-              onFinish(selectedWorkout, exerciseIndex + 1, true, navigation);
-              return 0;
-            }
+                );
+              } else {
+                // If all exercises are done, finish the workout
+                onFinish(selectedWorkout, exerciseIndex + 1, true, navigation);
+                return 0;
+              }
           }
         });
       }, 1000);
@@ -234,6 +243,11 @@ export default function WorkoutTimer({ selectedWorkout, navigation }: Props) {
     return `0${minutes}`.slice(-2) + ':' + `0${num}`.slice(-2)
   }
 
+  const [workoutName, setWorkoutName] = useState(selectedWorkout.exercises[exerciseIndex].name)
+  useEffect(() => {
+    setWorkoutName(selectedWorkout.exercises[exerciseIndex].name)
+  }, [exerciseIndex])
+
   return (
     <View style={styles.container}>
       {/*Displays corresponding workout information*/}
@@ -277,7 +291,7 @@ export default function WorkoutTimer({ selectedWorkout, navigation }: Props) {
       <View style={styles.gifContainer}>
         <Text style={styles.ExerciseName}>
           {" "}
-          {"Current Exercise:"} {selectedWorkout.exercises[exerciseIndex].name}{" "}
+          {"Current Exercise:"} {workoutName}{" "}
         </Text>
         <Text style={styles.gifText}> {"[Insert workout GIF Here]"} </Text>
       </View>

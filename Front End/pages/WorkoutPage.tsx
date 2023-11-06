@@ -1,3 +1,5 @@
+
+import React, { useState, useContext } from "react";
 import React, { useState } from "react";
 import {
   View,
@@ -8,7 +10,11 @@ import {
   ScrollView,
   Platform,
 } from "react-native";
+
 import { Workouts } from "../assets/workoutData";
+// import { level } from "../assets/levelData";
+import { LevelContext } from "../App";
+import ProgressBar from "../components/ProgressBar";
 
 const isIOS = Platform.OS === "ios";
 
@@ -27,10 +33,13 @@ interface Workout {
 
 interface Props {
   navigation: any; // Adjust the type based on your navigation setup
+  route: any; // Adjust the type based on your navigation setup
 }
 
-export default function WorkoutPage({ navigation }: Props) {
-  const [selectedWorkout, setSelectedWorkout] = useState<Workout | null>(null);
+export default function WorkoutPage({ navigation, route }: Props) {
+  const passedWorkoutKey = route.params?.selectedWorkoutKey;
+  const defaultWorkout = passedWorkoutKey ? Workouts.find(w => w.key === passedWorkoutKey) : null;
+  const [selectedWorkout, setSelectedWorkout] = useState<Workout | null>(defaultWorkout);
 
   const selectWorkout = (workout: Workout) => {
     setSelectedWorkout(workout === selectedWorkout ? null : workout);
@@ -54,12 +63,17 @@ export default function WorkoutPage({ navigation }: Props) {
     return `0${minutes}`.slice(-2) + ':' + `0${seconds}`.slice(-2)
   }
 
+  const {level, xp, totalXp, gainXp} = useContext(LevelContext)
+
   return (
 
     <ScrollView style={styles.container}>
       <Text style={styles.header}>
         Workout Page
       </Text>
+
+      <Button title="XP" onPress={() => {gainXp(10)}}></Button>
+      <ProgressBar currentXp={xp} totalXp={totalXp}/>
 
       {/* Display the list of workouts using map */}
       {Workouts.map((item) => {
@@ -86,6 +100,7 @@ export default function WorkoutPage({ navigation }: Props) {
                     </View>
                   ))}
                   {/* Start Button for the workout */}
+
                   <Button
                     title="Start"
                     onPress={() => startWorkout(item, navigation)}
