@@ -1,9 +1,22 @@
+
 import React, { useState, useContext } from "react";
-import { View, Text, Button, TouchableOpacity, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  Button,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  Platform,
+} from "react-native";
+
 import { Workouts } from "../assets/workoutData";
 // import { level } from "../assets/levelData";
 import { LevelContext } from "../App";
 import ProgressBar from "../components/ProgressBar";
+
+const isIOS = Platform.OS === "ios";
 
 interface Exercise {
   name: string;
@@ -54,10 +67,9 @@ export default function WorkoutPage({ navigation, route }: Props) {
 
   return (
 
-    <View style={styles.container}>
-      <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 16 }}>
+    <ScrollView style={styles.container}>
+      <Text style={styles.header}>
         Workout Page
-
       </Text>
 
       <Button title="XP" onPress={() => {gainXp(10)}}></Button>
@@ -67,37 +79,32 @@ export default function WorkoutPage({ navigation, route }: Props) {
       {Workouts.map((item) => {
         const isSelected = item === selectedWorkout;
         return (
-          <TouchableOpacity key={item.key} onPress={() => selectWorkout(item)}>
-            <View
-              style={{
-                padding: 16,
-                backgroundColor: "white",
-                borderColor: "#ccc",
-                borderWidth: 1,
-                borderRadius: 8,
-                marginBottom: 8,
-              }}
-            >
-              <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+          <TouchableOpacity
+            key={item.key}
+            onPress={() => selectWorkout(item)}
+          >
+            <View style={styles.workoutContainer}>
+              <Text style={styles.workoutName}>
                 {item.workout_name}
               </Text>
               {isSelected && (
-                <View style={styles.container}>
+                <View style={styles.exerciseContainer}>
                   {item.exercises.map((exercise, index) => (
-                    <View key={index} style={{ margin: 8 }}>
-                      <Text style={{ backgroundColor: 'white', padding: 10, borderRadius: 8, borderWidth: 1, borderColor: "#ccc" }}>
-                        {exercise.name} for <Text style={{ fontWeight: "bold" }}>{formatMilliseconds(exercise.duration)}</Text>
+                    <View key={index} style={styles.exerciseItem}>
+                      <Text style={styles.exerciseName}>
+                        {exercise.name} for{" "}
+                        <Text style={styles.exerciseDuration}>
+                          {formatMilliseconds(exercise.duration)}
+                        </Text>
                       </Text>
                     </View>
                   ))}
                   {/* Start Button for the workout */}
-                  <TouchableOpacity>
 
-                  </TouchableOpacity>
                   <Button
                     title="Start"
                     onPress={() => startWorkout(item, navigation)}
-                    color="green" // You can customize the button color
+                    color={isIOS ? "green" : "#007BFF"} // Adjust button color for iOS and web
                   />
                 </View>
               )}
@@ -109,9 +116,10 @@ export default function WorkoutPage({ navigation, route }: Props) {
         <Button
           title="Create Your Own"
           onPress={() => navigation.navigate("CustomWorkout")}
+          color={isIOS ? "green" : "#007BFF"} // Adjust button color for iOS and web
         />
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -119,6 +127,40 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    backgroundColor: "#f2f2f2", // Background color for the entire screen
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 16,
+  },
+  workoutContainer: {
+    padding: 16,
+    backgroundColor: "white",
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 8,
+    marginBottom: 8,
+  },
+  workoutName: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  exerciseContainer: {
+    marginTop: 8,
+  },
+  exerciseItem: {
+    margin: 8,
+  },
+  exerciseName: {
+    backgroundColor: 'white',
+    padding: 10,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#ccc",
+  },
+  exerciseDuration: {
+    fontWeight: "bold",
   },
   buttonContainer: {
     alignItems: "center", // Center horizontally
