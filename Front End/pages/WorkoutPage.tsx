@@ -1,6 +1,5 @@
-
 import React, { useState, useContext } from "react";
-import React, { useState } from "react";
+
 import {
   View,
   Text,
@@ -38,8 +37,12 @@ interface Props {
 
 export default function WorkoutPage({ navigation, route }: Props) {
   const passedWorkoutKey = route.params?.selectedWorkoutKey;
-  const defaultWorkout = passedWorkoutKey ? Workouts.find(w => w.key === passedWorkoutKey) : null;
-  const [selectedWorkout, setSelectedWorkout] = useState<Workout | null>(defaultWorkout);
+  const defaultWorkout = passedWorkoutKey
+    ? Workouts.find((w) => w.key === passedWorkoutKey)
+    : null;
+  const [selectedWorkout, setSelectedWorkout] = useState<Workout | null>(
+    defaultWorkout
+  );
 
   const selectWorkout = (workout: Workout) => {
     setSelectedWorkout(workout === selectedWorkout ? null : workout);
@@ -54,39 +57,36 @@ export default function WorkoutPage({ navigation, route }: Props) {
   };
 
   function formatMilliseconds(num) {
-    let seconds = num / 1000
-    let minutes = 0
+    let seconds = num / 1000;
+    let minutes = 0;
     if (seconds >= 60) {
-      minutes = Math.floor(seconds / 60)
-      seconds = seconds % 60
+      minutes = Math.floor(seconds / 60);
+      seconds = seconds % 60;
     }
-    return `0${minutes}`.slice(-2) + ':' + `0${seconds}`.slice(-2)
+    return `0${minutes}`.slice(-2) + ":" + `0${seconds}`.slice(-2);
   }
 
-  const {level, xp, totalXp, gainXp} = useContext(LevelContext)
+  const { level, xp, totalXp, gainXp } = useContext(LevelContext);
 
   return (
-
     <ScrollView style={styles.container}>
-      <Text style={styles.header}>
-        Workout Page
-      </Text>
+      <Text style={styles.header}>Workout Page</Text>
 
-      <Button title="XP" onPress={() => {gainXp(10)}}></Button>
-      <ProgressBar currentXp={xp} totalXp={totalXp}/>
+      <Button
+        title="XP"
+        onPress={() => {
+          gainXp(10);
+        }}
+      ></Button>
+      <ProgressBar currentXp={xp} totalXp={totalXp} />
 
       {/* Display the list of workouts using map */}
       {Workouts.map((item) => {
         const isSelected = item === selectedWorkout;
         return (
-          <TouchableOpacity
-            key={item.key}
-            onPress={() => selectWorkout(item)}
-          >
+          <TouchableOpacity key={item.key} onPress={() => selectWorkout(item)}>
             <View style={styles.workoutContainer}>
-              <Text style={styles.workoutName}>
-                {item.workout_name}
-              </Text>
+              <Text style={styles.workoutName}>{item.workout_name}</Text>
               {isSelected && (
                 <View style={styles.exerciseContainer}>
                   {item.exercises.map((exercise, index) => (
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     margin: 8,
   },
   exerciseName: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     padding: 10,
     borderRadius: 8,
     borderWidth: 1,
