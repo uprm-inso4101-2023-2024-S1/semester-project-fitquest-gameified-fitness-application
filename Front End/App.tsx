@@ -9,7 +9,7 @@ import WorkoutPage from "./pages/WorkoutPage";
 import CustomWorkouts from "./pages/CustomWorkouts";
 import SelectedWorkout from "./pages/SelectedWorkout";
 import FinishedRoute from "./pages/FinishedRoute";
-// import { LevelContext } from "./components/LevelContext";
+import { LevelContext } from "./components/LevelContext";
 import React, { createContext, useContext, useState } from 'react';
 
 export const LevelContext = createContext({

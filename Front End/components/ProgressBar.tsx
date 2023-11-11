@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useContext } from 'react';
 import { View, Text, Button, StyleSheet, Animated, Dimensions } from 'react-native';
 import { LevelContext } from '../App';
 
-// BUGS
 // barra no se ve linda en roadmap page
 
 const styles = StyleSheet.create({
@@ -33,28 +32,20 @@ const styles = StyleSheet.create({
 });
 
 export default function ProgressBar({ currentXp, totalXp }) {
-    const {level, xp, totalXp: total, gainXp } = useContext(LevelContext)
-    const [progress, setProgress] = useState(new Animated.Value(0));
-    const containerRef = useRef(null);
-    let newWidth = 0
+    const { level } = useContext(LevelContext);
+    const progress = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
-        if (containerRef.current) {
-            containerRef.current.measure((x, y, width, height, pageX, pageY) => {
-                if (width > 100) {
-                    newWidth = (currentXp / totalXp) * width;
-                } else {
-                    newWidth = currentXp * (totalXp / 100);
-                };
+        const percentageCompleted = currentXp / totalXp;
+        const newWidth = percentageCompleted * Dimensions.get('window').width;
 
-                Animated.timing(progress, {
-                    toValue: newWidth,
-                    duration: 100,
-                    useNativeDriver: false,
-                }).start();
-            });
-        }
+        Animated.timing(progress, {
+            toValue: newWidth,
+            duration: 100,
+            useNativeDriver: false,
+        }).start();
     }, [currentXp, totalXp]);
+
 
     return (
         <View style={[styles.container]} >
