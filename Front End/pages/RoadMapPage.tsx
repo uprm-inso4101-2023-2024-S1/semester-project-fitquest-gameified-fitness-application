@@ -17,10 +17,10 @@ export const RoadMapPage = ({ navigation }) => {
 
         {/* </View> */}
         <RoadMap navigation={navigation} />
-        <Button
+        {/* <Button
           title="Workouts"
           onPress={() => navigation.navigate("Workouts")}
-        />
+        /> */}
       </View>
     </View>
   );
