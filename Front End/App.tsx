@@ -11,7 +11,7 @@ import RoadMap from './components/RoadMap';
 import RoadMapWorkoutPage from "./pages/RoadMapWorkoutPage";
 import SelectedWorkout from "./pages/SelectedWorkout";
 import FinishedRoute from "./pages/FinishedRoute";
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 export const LevelContext = createContext({
   level: 0,
@@ -34,6 +34,45 @@ export default function App() {
     setXp((prevxp) => prevxp + amount);
     levelUp();
   };
+
+
+  ///////////this code was made to extract data from the data base///////////
+  const [data,setData] = useState([{}])
+  useEffect(() => {
+    fetch("/").then(
+      res => res.json()
+    ).then(
+      data => {
+        setData(data)
+        console.log(data)
+      }
+    )
+    }, [])
+  ///////////////////////////////////////////////////////////////////////////
+
+  ////////////this code was made to insert data into the database////////////
+  // const username = "John Doe";
+  // const email = "john@example.com";
+  // const password = "1234"
+
+  // const encodedUsername = encodeURIComponent(username);
+  // const encodedEmail = encodeURIComponent(email);
+  // const encodedPassword = encodeURIComponent(password);
+  
+  // const url = `/api/user?username=${encodedUsername}&email=${encodedEmail}&password=${encodedPassword}`;
+  // //           |       |   //
+  // //               ^
+  // //            this part is replaced with the route in backend
+  // fetch(url, {
+  //   method: "POST",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: JSON.stringify({ username, email, password }),
+  // })
+  //   .then((r) => r.json())
+  //   .then((data) => console.log(data));
+  ///////////////////////////////////////////////////////////////////////////
 
   const levelUp = () => {
     if (xp >= difficulty * level) {
