@@ -1,4 +1,5 @@
 from flask import Flask
+from handler.user_handler import user_handler
 #
 app = Flask(__name__)
 
@@ -10,3 +11,5 @@ def hello_world():  # put application's code here
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
+
+app.register_blueprint(user_handler, url_prefix= "/login")
