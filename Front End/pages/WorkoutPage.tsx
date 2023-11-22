@@ -74,6 +74,7 @@ export default function WorkoutPage({ navigation, route }: Props) {
 
       <Button
         title="XP"
+        color={isIOS ? "green" : "red"} // Adjust button color for iOS and web
         onPress={() => {
           gainXp(10);
         }}
@@ -102,9 +103,10 @@ export default function WorkoutPage({ navigation, route }: Props) {
                   {/* Start Button for the workout */}
 
                   <Button
-                    title="Start"
+                    title="Start" 
                     onPress={() => startWorkout(item, navigation)}
-                    color={isIOS ? "green" : "#007BFF"} // Adjust button color for iOS and web
+                    
+                    color={isIOS ? "green" : "red"} // Adjust button color for iOS and web
                   />
                 </View>
               )}
@@ -116,7 +118,7 @@ export default function WorkoutPage({ navigation, route }: Props) {
         <Button
           title="Create Your Own"
           onPress={() => navigation.navigate("CustomWorkout")}
-          color={isIOS ? "green" : "#007BFF"} // Adjust button color for iOS and web
+          color={isIOS ? "green" : "red"} // Adjust button color for iOS and web
         />
       </View>
     </ScrollView>
@@ -127,24 +129,27 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: "#f2f2f2", // Background color for the entire screen
+    backgroundColor: "gray",
+    // backgroundColor: "#262653", // Background color for the entire screen (Navy blue)
   },
   header: {
-    fontSize: 24,
+    fontSize: 30,
+    color: "black",
     fontWeight: "bold",
     marginBottom: 16,
   },
   workoutContainer: {
-    padding: 16,
-    backgroundColor: "white",
-    borderColor: "#ccc",
-    borderWidth: 1,
+    padding: 20,
+    backgroundColor: "black",
     borderRadius: 8,
     marginBottom: 8,
+    borderWidth: 2,
+    borderColor: "white",
   },
   workoutName: {
-    fontSize: 18,
+    fontSize: 25,
     fontWeight: "bold",
+    color: "white",
   },
   exerciseContainer: {
     marginTop: 8,
@@ -153,11 +158,12 @@ const styles = StyleSheet.create({
     margin: 8,
   },
   exerciseName: {
-    backgroundColor: "white",
+    backgroundColor: "#fffdd0",
     padding: 10,
     borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "#ccc",
+    marginBottom: 8,
+    // borderWidth: 2,
+    // borderColor: "white",
   },
   exerciseDuration: {
     fontWeight: "bold",
