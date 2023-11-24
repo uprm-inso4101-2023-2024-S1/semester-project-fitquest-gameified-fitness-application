@@ -12,6 +12,8 @@ import RoadMapWorkoutPage from "./pages/RoadMapWorkoutPage";
 import SelectedWorkout from "./pages/SelectedWorkout";
 import FinishedRoute from "./pages/FinishedRoute";
 import React, { createContext, useContext, useState } from 'react';
+import LoginScreen from "./pages/LoginScreen";
+import SignUpScreen from "./pages/SignUpScreen";
 
 export const LevelContext = createContext({
   level: 0,
@@ -20,8 +22,21 @@ export const LevelContext = createContext({
   gainXp: (amount) => { },
 });
 
+export type RootStackParamList = {
+  SignUp: undefined;
+  Login: undefined;
+  Roadmap: undefined;
+  Home: undefined;
+  Profile: undefined;
+  Workouts: undefined;
+  CustomWorkout: undefined;
+  SelectedWorkout: undefined;
+  FinishedRoute: undefined;
+  RoadMapWorkout: undefined;
+};
+
 const Tab = createBottomTabNavigator();
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
 
@@ -45,7 +60,7 @@ export default function App() {
   function Home() {
     return (
       <Tab.Navigator>
-        <Tab.Screen name="Roadmap" component={RoadMapPage} />
+          <Tab.Screen name="Roadmap" component={RoadMapPage} />
         <Tab.Screen name="Profile" component={ProfilePage} />
       </Tab.Navigator>
     );
@@ -61,6 +76,8 @@ export default function App() {
     }}>
       <NavigationContainer>
         <Stack.Navigator>
+          <Stack.Screen name="Login" component={LoginScreen}/>
+          <Stack.Screen name="SignUp" component={SignUpScreen}/>
           <Stack.Screen
             name="Home"
             options={{ headerShown: false }}
