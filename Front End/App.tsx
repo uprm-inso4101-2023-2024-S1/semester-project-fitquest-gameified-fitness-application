@@ -39,7 +39,7 @@ export default function App() {
   ///////////this code was made to extract data from the data base///////////
   const [data,setData] = useState([{}])
   useEffect(() => {
-    fetch("/").then(
+    fetch("/user/login").then(
       res => res.json()
     ).then(
       data => {
@@ -51,27 +51,29 @@ export default function App() {
   ///////////////////////////////////////////////////////////////////////////
 
   ////////////this code was made to insert data into the database////////////
-  // const username = "John Doe";
-  // const email = "john@example.com";
-  // const password = "1234"
+  const username = "John Doe";
+  const email = "john@example.com";
+  const password = "1234"
 
-  // const encodedUsername = encodeURIComponent(username);
-  // const encodedEmail = encodeURIComponent(email);
-  // const encodedPassword = encodeURIComponent(password);
-  
-  // const url = `/api/user?username=${encodedUsername}&email=${encodedEmail}&password=${encodedPassword}`;
-  // //           |       |   //
-  // //               ^
-  // //            this part is replaced with the route in backend
-  // fetch(url, {
-  //   method: "POST",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: JSON.stringify({ username, email, password }),
-  // })
-  //   .then((r) => r.json())
-  //   .then((data) => console.log(data));
+  const encodedUsername = encodeURIComponent(username);
+  const encodedEmail = encodeURIComponent(email);
+  const encodedPassword = encodeURIComponent(password);
+  // i think that you can use the encodeURIComponent directly on the string
+  //but i left it like this so that it is easier to understand
+
+  //the information is encoded so that it can form part of the url that is 
+  //going to be sent to the back end.
+  const url = `/user/login?username=${encodedUsername}&email=${encodedEmail}&password=${encodedPassword}`;
+
+  fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ username, email, password }),
+  })
+    .then((r) => r.json())
+    .then((data) => console.log(data));
   ///////////////////////////////////////////////////////////////////////////
 
   const levelUp = () => {
