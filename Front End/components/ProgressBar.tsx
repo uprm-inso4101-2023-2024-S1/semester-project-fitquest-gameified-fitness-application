@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
         padding: 8,
     },
     levelText: {
+        fontSize: 20,
         fontWeight: 'bold',
     },
     bar: {

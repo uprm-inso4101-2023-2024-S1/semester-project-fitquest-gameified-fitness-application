@@ -208,13 +208,13 @@ export const RoadMap = ({ navigation }) => {
           style={styles.leftButton}
           onPress={handleLeftButtonPress}
         >
-          <Icon name="home" size={40} color="black" />
+          <Icon name="home" size={50} color="black" />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.rightButton}
-          onPress={handleRightButtonPress}
+          onPress={() => navigation.navigate("Workouts")}
         >
-          <Icon name="dumbbell" size={40} color="black" />
+          <Icon name="dumbbell" size={50} color="black" />
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -224,13 +224,15 @@ export const RoadMap = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    borderRadius: 15,
+    backgroundColor: "red", //dark orange
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     textAlign: "center",
     marginVertical: 0,
+    backgroundColor: "red"
   },
   leftButton: {
     // Borrar?
@@ -270,7 +272,8 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flex: 1,
     paddingHorizontal: 150,
-  },
+    backgroundColor: "black"  // Navy blue background color
+},
   leftSide: {
     alignSelf: "flex-start",
   },
@@ -280,16 +283,17 @@ const styles = StyleSheet.create({
   completedButton: {
     width: 150, // Ancho del rectángulo
     height: 50, // Alto del rectángulo
-    backgroundColor: "green", // Color de fondo cuando esté completado
+    backgroundColor: "grey", // Color de fondo cuando esté completado
     margin: 10,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10, // Bordes redondeados, puedes ajustar según prefieras
+    borderWidth: 2,
   },
   incompleteButton: {
     width: 150,
     height: 50,
-    backgroundColor: "gray", // Color de fondo cuando esté pendiente
+    backgroundColor: "#fffdd0", // Color de fondo cuando esté pendiente
     margin: 10,
     justifyContent: "center",
     alignItems: "center",
@@ -303,10 +307,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
+    borderWidth: 2,
+    borderColor: "white"
   },
   buttonText: {
     fontSize: 20,
-    color: "white",
+    color: "black",
   },
   buttonContainer: {
     position: "absolute",
