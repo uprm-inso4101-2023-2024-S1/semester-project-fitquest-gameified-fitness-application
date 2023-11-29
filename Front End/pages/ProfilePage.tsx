@@ -7,7 +7,7 @@ import { LevelContext } from "../App";
 export const userData = {
   name: "Test",
   exerciseCompleted: 0,
-  timeSpent: 3000,
+  timeSpent: 0,
   age: 20,
 };
 

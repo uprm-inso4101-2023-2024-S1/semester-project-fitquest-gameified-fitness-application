@@ -8,7 +8,7 @@ import {
   Dimensions,
 } from "react-native";
 import { LevelContext } from "../App";
-
+import { userData } from "../pages/ProfilePage";
 //variable for screen dimensions
 const screen = Dimensions.get("window");
 
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
   },
 
   gifText: {
-    fontSize: 25,
+    fontSize: 15,
     color: "#000000",
   },
 
@@ -143,7 +143,7 @@ export default function WorkoutTimer({ selectedWorkout, navigation }: Props) {
   const [exerciseIndex, setExerciseIndex] = useState<number>(0);
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [completed, setCompleted] = useState<boolean>(false);
-  const {level, xp, totalXp, gainXp} = useContext(LevelContext);
+  const { level, xp, totalXp, gainXp } = useContext(LevelContext);
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -169,11 +169,14 @@ export default function WorkoutTimer({ selectedWorkout, navigation }: Props) {
   };
 
   useEffect(() => {
-    if (isRunning)
-      gainXp(10)
-  }, [exerciseIndex])
+    if (isRunning) {
+      gainXp(10);
+      userData.exerciseCompleted += 1;
+      userData.timeSpent += 1000;
+    }
+  }, [exerciseIndex]);
 
-  console.log(xp)
+  console.log(xp);
 
   useEffect(() => {
     if (isRunning) {
@@ -187,14 +190,18 @@ export default function WorkoutTimer({ selectedWorkout, navigation }: Props) {
             if (exerciseIndex + 1 < selectedWorkout.exercises.length) {
               // If there are more exercises, move to the next exercise
               setExerciseIndex((prevIndex) => prevIndex + 1);
+
               return (
                 selectedWorkout.exercises[exerciseIndex + 1].duration / 1000
-                );
-              } else {
-                // If all exercises are done, finish the workout
-                onFinish(selectedWorkout, exerciseIndex + 1, true, navigation);
-                return 0;
-              }
+              );
+            } else {
+              // If all exercises are done, finish the workout
+              userData.exerciseCompleted += 1;
+              userData.timeSpent += 1000;
+              gainXp(10);
+              onFinish(selectedWorkout, exerciseIndex + 1, true, navigation);
+              return 0;
+            }
           }
         });
       }, 1000);
@@ -235,18 +242,25 @@ export default function WorkoutTimer({ selectedWorkout, navigation }: Props) {
   };
 
   function formatSeconds(num) {
-    let minutes = 0
+    let minutes = 0;
     if (num >= 60) {
-      minutes = Math.floor(num / 60)
-      num -= minutes * num
+      minutes = Math.floor(num / 60);
+      num -= minutes * num;
     }
-    return `0${minutes}`.slice(-2) + ':' + `0${num}`.slice(-2)
+    return `0${minutes}`.slice(-2) + ":" + `0${num}`.slice(-2);
   }
 
-  const [workoutName, setWorkoutName] = useState(selectedWorkout.exercises[exerciseIndex].name)
+  const [workoutName, setWorkoutName] = useState(
+    selectedWorkout.exercises[exerciseIndex].name
+  );
+
+  const [workoutDesc, setWorkoutDesc] = useState(
+    selectedWorkout.exercises[exerciseIndex].description
+  );
   useEffect(() => {
-    setWorkoutName(selectedWorkout.exercises[exerciseIndex].name)
-  }, [exerciseIndex])
+    setWorkoutName(selectedWorkout.exercises[exerciseIndex].name);
+    setWorkoutDesc(selectedWorkout.exercises[exerciseIndex].description);
+  }, [exerciseIndex]);
 
   return (
     <View style={styles.container}>
@@ -255,7 +269,12 @@ export default function WorkoutTimer({ selectedWorkout, navigation }: Props) {
 
       {/*Displays timer with respective designs */}
       <View style={styles.timerContainer}>
-        <Text style={styles.timerText}> {`0${Math.floor(timeRemaining/60)}`.slice(-2) + ':' + `0${timeRemaining%60}`.slice(-2)} </Text>
+        <Text style={styles.timerText}>
+          {" "}
+          {`0${Math.floor(timeRemaining / 60)}`.slice(-2) +
+            ":" +
+            `0${timeRemaining % 60}`.slice(-2)}{" "}
+        </Text>
       </View>
 
       {/*Displays the buttons with their respective designs*/}
@@ -293,7 +312,7 @@ export default function WorkoutTimer({ selectedWorkout, navigation }: Props) {
           {" "}
           {"Current Exercise:"} {workoutName}{" "}
         </Text>
-        <Text style={styles.gifText}> {"[Insert workout GIF Here]"} </Text>
+        <Text style={styles.gifText}> {workoutDesc} </Text>
       </View>
     </View>
   );
