@@ -197,7 +197,8 @@ export default function WorkoutTimer({ selectedWorkout, navigation }: Props) {
             } else {
               // If all exercises are done, finish the workout
               userData.exerciseCompleted += 1;
-              userData.timeSpent += 1000;
+              userData.timeSpent +=
+                selectedWorkout.exercises[exerciseIndex].duration;
               gainXp(10);
               onFinish(selectedWorkout, exerciseIndex + 1, true, navigation);
               return 0;
